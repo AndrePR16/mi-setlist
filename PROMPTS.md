@@ -212,6 +212,13 @@ R: Se muestra igual, con un placeholder genérico para el dato faltante
 
 P: ¿Cuántos resultados como máximo mostramos por búsqueda?
 R: 25 (default típico de iTunes API)
+
+Chequeo contra los criterios de HU-01:
+
+✅ Muestra carátula, nombre, artista y duración por resultado.
+✅ Cada resultado es una tarjeta diferenciada (.tarjeta-cancion).
+✅ Input vacío no dispara búsqueda (if (termino === '') return;).
+✅ Duración en m:ss, no milisegundos.
 ------------------------------------------------------------------------------
 HU-02
 Como ya tienes el contrato técnico y la estructura de archivo, no es necesito repetirlo, ahora continuemos con la HU-02
@@ -242,4 +249,52 @@ R: Sí, botón "Reintentar" además del mensaje
 Estado central: agrego un campo estadoBusqueda con valores explícitos ('idle' | 'cargando' | 'error' | 'vacio' | 'ok') en vez de banderas sueltas (cargando: true/false, error: true/false). Con banderas sueltas es fácil terminar en estados imposibles (ej. cargando: true y error: true al mismo tiempo); con un solo campo de "estado con nombre" eso no puede pasar.
 Botón deshabilitado durante carga: lo controlamos leyendo estadoBusqueda === 'cargando' en cada render, no con una variable aparte — así el HTML siempre refleja el estado central, nunca se desincroniza.
 Reintentar: guardo el último término buscado en el estado para poder repetir la búsqueda con el botón, usando delegación de eventos (como pide el contrato) en vez de poner un addEventListener nuevo cada vez que se pinta el mensaje de error.
+
+Chequeo contra los criterios de HU-02:
+
+✅ Indicador de carga visible (spinner + "Buscando...") mientras estadoBusqueda === 'cargando'.
+✅ Mensaje de error claro, no técnico, con botón "Reintentar" (tu decisión).
+✅ Mensaje amigable de "sin resultados" cuando la búsqueda no arroja nada.
+✅ El indicador desaparece apenas se llega a 'ok', 'error' o 'vacio' — nunca queda "cargando" pegado.
+✅ Bonus de tu primera respuesta: el botón se deshabilita durante la carga, evitando búsquedas superpuestas.
 ------------------------------------------------------------------
+Como ya tienes el contrato técnico y la estructura de archivo, no es necesito repetirlo, ahora continuemos con la HU-03
+TAREA: Implementemos JUNTOS esta historia:
+HU-03: Crear una playlist
+**Como** usuario, **quiero** crear playlists con un nombre elegido por mí, **para** organizar mi música por ocasión o gusto.
+**Criterios de aceptación:**
+- Al ingresar un nombre y confirmar, la nueva playlist aparece inmediatamente en el listado de playlists.
+- No se puede crear una playlist con nombre vacío (se muestra un aviso o el botón queda deshabilitado).
+- Se pueden crear varias playlists con nombres distintos y todas quedan visibles en la lista.
+- La playlist recién creada aparece vacía, con un estado vacío amigable (ej. "Todavía no agregaste canciones").
+MODO: Antes de escribir código, hazme 2 o 3 preguntas estratégicas necesarias
+sobre decisiones que me corresponden a mí (experiencia de usuario,
+casos borde, estructura de datos). Espera mis respuestas. Después
+dame el código en porciones pequeñas, explicando qué hace cada una
+y en qué archivo va.
+RESTRICCIONES: Respeta el contrato técnico que te compartí en mensajes anteriores. No reescribas archivos que no te pedí. Si el contrato te impide algo, dímelo en vez de saltártelo. No supongas nada.
+
+P: ¿Se permite crear dos playlists con el mismo nombre?
+R: No, si el nombre ya existe se avisa y no se crea
+
+P: Al crear una playlist nueva, ¿se selecciona automáticamente para mostrar su detalle vacío (adelantando parte de HU-05), o solo aparece en el listado general?
+R: Sí, al crearla queda seleccionada y se ve su detalle vacío de inmediato
+
+P: ¿Cómo querés que se vea el formulario para crear una playlist?
+R: Botón 'Nueva playlist' que despliega/oculta el formulario
+
+Con esas respuestas, así construimos HU-03:
+
+Nombre duplicado: la validación de "¿ya existe este nombre?" la hago comparando en minúsculas y sin espacios extra (trim().toLowerCase()), para que "Rock" y "rock " se traten como el mismo nombre.
+Selección automática: al crear la playlist, la marco como seleccionada en el estado y agrego una vista de detalle mínima que muestra su nombre y el estado vacío amigable. Ojo: esta vista de detalle todavía es básica — en HU-05 la vamos a expandir para listar canciones reales. Por ahora solo cumple lo que pide HU-03.
+Formulario colapsable: agrego un flag en el estado central (mostrarFormularioPlaylist) en vez de manejar el show/hide solo con CSS/DOM suelto — así seguimos el patrón "cambia estado → render()" también para esta interacción, no solo para los datos.
+Decisión que tomo yo (no me la preguntaste, pero el criterio de aceptación deja abierto "aviso o botón deshabilitado"): uso un mensaje de aviso inline, igual que hicimos con los errores de búsqueda en HU-02, para mantener el mismo lenguaje visual en toda la app. Si preferís botón deshabilitado en su lugar, lo cambiamos.
+
+Chequeo contra los criterios de HU-03:
+
+✅ Al crear, la playlist aparece de inmediato en #lista-playlists.
+✅ Nombre vacío → aviso, no se crea (errorFormularioPlaylist).
+✅ Nombres duplicados → aviso, no se crea (existeNombrePlaylist).
+✅ Varias playlists con nombres distintos, todas visibles en la lista.
+✅ Playlist recién creada se selecciona sola y muestra "Todavía no agregaste canciones" en #detalle-playlist.
+-------------------------------------------------------------------------

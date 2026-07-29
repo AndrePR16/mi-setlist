@@ -97,3 +97,52 @@ button:disabled {
   opacity: 0.6;
   cursor: not-allowed;
 }
+
+.seccion-playlists {
+  margin-top: 2rem;
+  border-top: 1px solid #eee;
+  padding-top: 1.5rem;
+}
+
+.cabecera-playlists {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.form-playlist {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.lista-playlists {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.item-playlist {
+  padding: 0.4rem 0.8rem;
+  border: 1px solid #ccc;
+  border-radius: 999px;
+  background: #fff;
+  cursor: pointer;
+}
+
+.item-playlist--activa {
+  background: #333;
+  color: #fff;
+  border-color: #333;
+}
+
+.detalle-playlist {
+  padding: 1rem;
+  border: 1px solid #eee;
+  border-radius: 8px;
+  min-height: 3rem;
+}

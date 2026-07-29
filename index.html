@@ -11,15 +11,25 @@
     <h1>🎵 Mi Setlist</h1>
     <p id="app"></p>
     <form id="form-busqueda" class="form-busqueda">
-        <input type="text" 
-        id="input-busqueda" 
-        name="busqueda" 
-        placeholder="Buscar por artista o título..."
-        autocomplete="off" />
+        <input type="text" id="input-busqueda" name="busqueda" placeholder="Buscar por artista o título..."
+            autocomplete="off" />
         <button type="submit" id="boton-buscar">Buscar</button>
     </form>
     <div id="estado-busqueda" class="zona-estado" aria-live="polite"></div>
     <section id="resultados" class="lista-resultados" aria-live="polite"></section>
+
+    <section class="seccion-playlists">
+        <div class="cabecera-playlists">
+            <h2>Mis playlists</h2>
+            <button type="button" id="boton-nueva-playlist">Nueva playlist</button>
+        </div>
+
+        <div id="formulario-playlist-contenedor"></div>
+
+        <div id="lista-playlists" class="lista-playlists"></div>
+
+        <div id="detalle-playlist" class="detalle-playlist"></div>
+    </section>
     <script type="module" src="js/app.js"></script>
 </body>
 

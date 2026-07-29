@@ -74,3 +74,72 @@ export function renderEstadoBusqueda() {
       break;
   }
 }
+
+export function renderFormularioPlaylist() {
+  const contenedor = document.getElementById('formulario-playlist-contenedor');
+  const { mostrarFormularioPlaylist, errorFormularioPlaylist } = getEstado();
+
+  if (!mostrarFormularioPlaylist) {
+    contenedor.innerHTML = '';
+    return;
+  }
+
+  contenedor.innerHTML = `
+    <form id="form-playlist" class="form-playlist">
+      <input
+        type="text"
+        id="input-nombre-playlist"
+        name="nombrePlaylist"
+        placeholder="Nombre de la playlist (ej. Road trip)"
+        autocomplete="off"
+      />
+      <button type="submit">Crear</button>
+      ${errorFormularioPlaylist
+        ? `<p class="mensaje-estado mensaje-error" role="alert">${escaparHTML(errorFormularioPlaylist)}</p>`
+        : ''
+      }
+    </form>
+  `;
+
+  document.getElementById('input-nombre-playlist').focus();
+}
+
+export function renderListaPlaylists() {
+  const contenedor = document.getElementById('lista-playlists');
+  const { playlists, playlistSeleccionadaId } = getEstado();
+
+  if (playlists.length === 0) {
+    contenedor.innerHTML = `<p class="mensaje-estado mensaje-vacio">Todavía no creaste ninguna playlist.</p>`;
+    return;
+  }
+
+  contenedor.innerHTML = playlists.map((playlist) => `
+    <button
+      type="button"
+      class="item-playlist ${playlist.id === playlistSeleccionadaId ? 'item-playlist--activa' : ''}"
+      data-id="${playlist.id}"
+    >
+      ${escaparHTML(playlist.nombre)}
+    </button>
+  `).join('');
+}
+
+export function renderDetallePlaylist() {
+  const contenedor = document.getElementById('detalle-playlist');
+  const { playlists, playlistSeleccionadaId } = getEstado();
+  const playlist = playlists.find((p) => p.id === playlistSeleccionadaId);
+
+  if (!playlist) {
+    contenedor.innerHTML = '';
+    return;
+  }
+
+  // Vista mínima para HU-03. El listado real de canciones llega en HU-05.
+  contenedor.innerHTML = `
+    <h2>${escaparHTML(playlist.nombre)}</h2>
+    ${playlist.canciones.length === 0
+      ? `<p class="mensaje-estado mensaje-vacio">Todavía no agregaste canciones.</p>`
+      : ''
+    }
+  `;
+}
