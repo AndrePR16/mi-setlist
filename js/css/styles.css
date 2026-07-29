@@ -41,3 +41,59 @@
   font-size: 0.85rem;
   color: #666;
 }
+
+.zona-estado {
+  min-height: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.mensaje-estado {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.95rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+}
+
+.mensaje-cargando {
+  color: #444;
+}
+
+.mensaje-error {
+  background: #fdecea;
+  color: #a12b1f;
+}
+
+.mensaje-vacio {
+  background: #f3f3f3;
+  color: #555;
+}
+
+.boton-reintentar {
+  margin-left: 0.5rem;
+  border: 1px solid currentColor;
+  background: transparent;
+  color: inherit;
+  border-radius: 4px;
+  padding: 0.15rem 0.5rem;
+  cursor: pointer;
+}
+
+.spinner {
+  width: 14px;
+  height: 14px;
+  border: 2px solid #ccc;
+  border-top-color: #444;
+  border-radius: 50%;
+  animation: girar 0.6s linear infinite;
+}
+
+@keyframes girar {
+  to { transform: rotate(360deg); }
+}
+
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}

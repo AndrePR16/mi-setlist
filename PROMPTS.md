@@ -204,4 +204,42 @@ dame el código en porciones pequeñas, explicando qué hace cada una
 y en qué archivo va.
 
 RESTRICCIONES: Respeta el contrato técnico que te compartí en mensajes anteriores. No reescribas archivos que no te pedí. Si el contrato te impide algo, dímelo en vez de saltártelo. No supongas nada.
+P: ¿Cómo se dispara la búsqueda?
+R: Ambas: botón + Enter en el input
+
+P: ¿Qué pasa si un resultado de iTunes viene con datos incompletos (ej. sin carátula o sin género)?
+R: Se muestra igual, con un placeholder genérico para el dato faltante
+
+P: ¿Cuántos resultados como máximo mostramos por búsqueda?
+R: 25 (default típico de iTunes API)
 ------------------------------------------------------------------------------
+HU-02
+Como ya tienes el contrato técnico y la estructura de archivo, no es necesito repetirlo, ahora continuemos con la HU-02
+TAREA: Implementemos JUNTOS esta historia:
+HU-02: Comunicar el estado de la búsqueda
+**Como** usuario, **quiero** saber qué está pasando mientras busco, **para** no pensar que la app está rota o colgada.
+**Criterios de aceptación:**
+- Mientras la búsqueda está en curso, se ve un indicador de carga (spinner, texto "Buscando...", etc.).
+- Si la API falla o no responde, aparece un mensaje de error claro y no técnico, sin dejar la pantalla en blanco.
+- Si la búsqueda no arroja resultados, aparece un mensaje amigable (ej. "No encontramos canciones con ese nombre. Probá con otro término.").
+- El indicador de carga desaparece apenas se muestran resultados, error o mensaje de "sin resultados".
+MODO: Antes de escribir código, hazme 2 o 3 preguntas estratégicas necesarias
+sobre decisiones que me corresponden a mí (experiencia de usuario,
+casos borde, estructura de datos). Espera mis respuestas. Después
+dame el código en porciones pequeñas, explicando qué hace cada una
+y en qué archivo va.
+RESTRICCIONES: Respeta el contrato técnico que te compartí en mensajes anteriores. No reescribas archivos que no te pedí. Si el contrato te impide algo, dímelo en vez de saltártelo. No supongas nada.
+
+P: ¿Qué pasa si el usuario dispara una nueva búsqueda mientras la anterior todavía está en curso (ej. escribe rápido y manda varias)?
+R: Se ignora la nueva mientras haya una en curso (botón deshabilitado durante la carga)
+
+P: ¿Dónde querés que se vea el indicador de carga y los mensajes?
+R: En una zona de estado separada, arriba de los resultados, sin tocar el contenedor de resultados
+
+P: Para el mensaje de error de la API, ¿querés incluir un botón para reintentar la misma búsqueda?
+R: Sí, botón "Reintentar" además del mensaje
+
+Estado central: agrego un campo estadoBusqueda con valores explícitos ('idle' | 'cargando' | 'error' | 'vacio' | 'ok') en vez de banderas sueltas (cargando: true/false, error: true/false). Con banderas sueltas es fácil terminar en estados imposibles (ej. cargando: true y error: true al mismo tiempo); con un solo campo de "estado con nombre" eso no puede pasar.
+Botón deshabilitado durante carga: lo controlamos leyendo estadoBusqueda === 'cargando' en cada render, no con una variable aparte — así el HTML siempre refleja el estado central, nunca se desincroniza.
+Reintentar: guardo el último término buscado en el estado para poder repetir la búsqueda con el botón, usando delegación de eventos (como pide el contrato) en vez de poner un addEventListener nuevo cada vez que se pinta el mensaje de error.
+------------------------------------------------------------------
