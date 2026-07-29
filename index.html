@@ -1,13 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
 </head>
+
 <body>
-<h1>🎵 Mi Setlist</h1>
-<p id="app"></p>
-<script type="module" src="js/app.js"></script>
+    <h1>🎵 Mi Setlist</h1>
+    <p id="app"></p>
+    <form id="form-busqueda" class="form-busqueda">
+        <input type="text" id="input-busqueda" name="busqueda" placeholder="Buscar por artista o título..."
+            autocomplete="off" />
+        <button type="submit">Buscar</button>
+    </form>
+
+    <section id="resultados" class="lista-resultados" aria-live="polite"></section>
+    <script type="module" src="js/app.js"></script>
 </body>
+
 </html>
