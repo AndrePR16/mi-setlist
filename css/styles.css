@@ -554,3 +554,19 @@ button:disabled {
   color: #888;
   font-weight: 500;
 }
+
+.estadisticas-playlist {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  padding: 0.6rem 0;
+  margin-bottom: 0.75rem;
+  border-bottom: 1px solid #eee;
+  font-size: 0.85rem;
+  color: #666;
+}
+
+.estadistica-item strong {
+  color: #333;
+  font-weight: 600;
+}

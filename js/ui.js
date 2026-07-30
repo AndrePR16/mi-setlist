@@ -35,6 +35,7 @@ function renderPopoverAgregar(cancion) {
   `;
 }
 
+
 export function renderResultados() {
   const contenedor = document.getElementById('resultados');
   const { resultadosBusqueda } = getEstado();
@@ -188,6 +189,56 @@ function formatearDuracionTotal(duracionMsTotal) {
   return `${horas} h ${minutos} min`;
 }
 
+function encontrarMasFrecuente(valores) {
+  const conteos = new Map();
+
+  for (const valor of valores) {
+    conteos.set(valor, (conteos.get(valor) || 0) + 1);
+  }
+
+  let valorGanador = null;
+  let maxConteo = 0;
+
+  for (const valor of valores) {
+    const conteo = conteos.get(valor);
+    if (conteo > maxConteo) {
+      maxConteo = conteo;
+      valorGanador = valor;
+    }
+  }
+
+  return valorGanador;
+}
+
+function renderEstadisticasPlaylist(playlist) {
+  const cantidadCanciones = playlist.canciones.length;
+
+  if (cantidadCanciones === 0) {
+    return `
+      <div class="estadisticas-playlist">
+        <p class="mensaje-estado mensaje-vacio">Sin datos todavía.</p>
+      </div>
+    `;
+  }
+
+  const generos = playlist.canciones
+    .map((item) => item.cancion.genero)
+    .filter((genero) => genero !== 'Género desconocido');
+
+  const artistas = playlist.canciones.map((item) => item.cancion.artista);
+
+  const generoMasFrecuente = encontrarMasFrecuente(generos) || 'Sin datos';
+  const artistaMasFrecuente = encontrarMasFrecuente(artistas);
+
+  return `
+    <div class="estadisticas-playlist">
+      <span class="estadistica-item">Canciones: <strong>${cantidadCanciones}</strong></span>
+      <span class="estadistica-item">Género: <strong>${escaparHTML(generoMasFrecuente)}</strong></span>
+      <span class="estadistica-item">Artista: <strong>${escaparHTML(artistaMasFrecuente)}</strong></span>
+    </div>
+  `;
+}
+
 export function renderDetallePlaylist() {
   const contenedor = document.getElementById('detalle-playlist');
   const { playlists, playlistSeleccionadaId } = getEstado();
@@ -202,6 +253,7 @@ export function renderDetallePlaylist() {
     (acumulado, item) => acumulado + item.cancion.duracionMs,
     0
   );
+
   const contenidoCanciones = playlist.canciones.length === 0
     ? `<p class="mensaje-estado mensaje-vacio">Todavía no agregaste canciones.</p>`
     : `<ul class="lista-canciones-playlist">
@@ -241,6 +293,7 @@ export function renderDetallePlaylist() {
         data-nombre="${escaparHTML(playlist.nombre)}"
       >Eliminar playlist</button>
     </div>
+    ${renderEstadisticasPlaylist(playlist)}
     ${contenidoCanciones}
   `;
 }
