@@ -121,11 +121,36 @@
 
 ---
 
+## EXTRAS — Funcionalidades fuera de las 10 historias del MVP
+
+### HU-11: Modo oscuro
+**Como** usuario, **quiero** poder cambiar la app a un tema oscuro, **para** usarla cómodamente en ambientes con poca luz o según mi preferencia visual.
+
+**Criterios de aceptación:**
+- Si el usuario nunca cambió el tema manualmente, la app respeta la preferencia del sistema operativo (claro u oscuro).
+- El control para cambiar de tema está siempre visible y disponible, sin importar la preferencia del sistema.
+- Una vez que el usuario elige un tema manualmente, esa elección se guarda y prevalece sobre la preferencia del sistema en visitas futuras.
+- El cambio de tema es inmediato, sin recargar la página.
+
+---
+
+### HU-12: Marcar canciones como favoritas
+**Como** usuario, **quiero** marcar canciones como favoritas con una estrella, **para** identificar rápido mis canciones preferidas dentro de una playlist.
+
+**Criterios de aceptación:**
+- Cada canción dentro de una playlist tiene un ícono de estrella clickeable para marcarla/desmarcarla como favorita.
+- El estado de favorito se ve claramente distinto (estrella llena vs. vacía).
+- Hay una forma de filtrar o ver solo las canciones favoritas dentro de una playlist.
+- El estado de favorito persiste al recargar la página (mismo mecanismo de localStorage que ya tenemos).
+
+---
+
 ## Resumen de cobertura
 
 | Sprint | Historias | Funcionalidades del MVP cubiertas |
 |--------|-----------|-------------------------------------|
 | Sprint 1 | HU-01 a HU-05 | Búsqueda, estados de búsqueda, crear playlist, agregar canciones, ver contenido |
 | Sprint 2 | HU-06 a HU-10 | Quitar/eliminar con confirmación, duración total, estadísticas, orden, persistencia y recuperación |
+| Extra | HU-11 y HU-12 | Modo oscuro, canciones favoritas — fuera del alcance original del MVP |
 
-**Nota:** ninguna historia incluye funcionalidades fuera de las 10 del MVP definido.
+**Nota:** las historias HU-01 a HU-10 cubren la totalidad del MVP definido. HU-11 y HU-12 son funcionalidades adicionales, incorporadas después de cerrar ambos sprints.
