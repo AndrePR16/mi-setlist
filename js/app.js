@@ -14,6 +14,10 @@ import {
   agregarCancionAPlaylist,
   setToast,
   limpiarToast,
+  abrirModalConfirmacion,
+  cerrarModalConfirmacion,
+  quitarCancionDePlaylist,
+  eliminarPlaylist,
 } from './state.js';
 import {
   renderResultados,
@@ -22,6 +26,7 @@ import {
   renderListaPlaylists,
   renderDetallePlaylist,
   renderToast,
+  renderModalConfirmacion,
 } from './ui.js';
 
 let idTimeoutToast = null;
@@ -174,6 +179,71 @@ function manejarSubmitResultados(evento) {
   programarOcultarToast();
 }
 
+function manejarClickDetallePlaylist(evento) {
+  const botonEliminarPlaylist = evento.target.closest('[data-action="eliminar-playlist"]');
+  if (botonEliminarPlaylist) {
+    abrirModalConfirmacion({
+      tipo: 'playlist',
+      playlistId: botonEliminarPlaylist.dataset.playlistId,
+      nombre: botonEliminarPlaylist.dataset.nombre,
+    });
+    renderModalConfirmacion();
+    return;
+  }
+
+  const botonQuitarCancion = evento.target.closest('[data-action="quitar-cancion"]');
+  if (botonQuitarCancion) {
+    abrirModalConfirmacion({
+      tipo: 'cancion',
+      playlistId: botonQuitarCancion.dataset.playlistId,
+      itemId: botonQuitarCancion.dataset.itemId,
+      nombre: botonQuitarCancion.dataset.titulo,
+    });
+    renderModalConfirmacion();
+  }
+}
+
+function ejecutarConfirmacionModal() {
+  const { modalConfirmacion } = getEstado();
+  if (!modalConfirmacion) return;
+
+  if (modalConfirmacion.tipo === 'playlist') {
+    eliminarPlaylist(modalConfirmacion.playlistId);
+  } else {
+    quitarCancionDePlaylist(modalConfirmacion.playlistId, modalConfirmacion.itemId);
+  }
+
+  renderModalConfirmacion();
+  renderListaPlaylists();
+  renderDetallePlaylist();
+}
+
+function manejarClickModal(evento) {
+  if (evento.target.closest('[data-action="confirmar-modal"]')) {
+    ejecutarConfirmacionModal();
+    return;
+  }
+
+  if (evento.target.closest('[data-action="cancelar-modal"]')) {
+    cerrarModalConfirmacion();
+    renderModalConfirmacion();
+    return;
+  }
+
+  // Clic directo sobre el overlay (fuera del diálogo) = cancelar
+  if (evento.target.id === 'modal-confirmacion') {
+    cerrarModalConfirmacion();
+    renderModalConfirmacion();
+  }
+}
+
+function manejarTeclaGlobal(evento) {
+  if (evento.key === 'Escape' && getEstado().modalConfirmacion) {
+    cerrarModalConfirmacion();
+    renderModalConfirmacion();
+  }
+}
+
 function init() {
   const form = document.getElementById('form-busqueda');
   form.addEventListener('submit', manejarSubmitBusqueda);
@@ -193,6 +263,14 @@ function init() {
   const contenedorResultados = document.getElementById('resultados');
   contenedorResultados.addEventListener('click', manejarClickResultados);
   contenedorResultados.addEventListener('submit', manejarSubmitResultados);
+
+  const contenedorDetallePlaylist = document.getElementById('detalle-playlist');
+  contenedorDetallePlaylist.addEventListener('click', manejarClickDetallePlaylist);
+
+  const modal = document.getElementById('modal-confirmacion');
+  modal.addEventListener('click', manejarClickModal);
+
+  document.addEventListener('keydown', manejarTeclaGlobal);
 
   renderListaPlaylists(); // pinta el estado vacío inicial ("Todavía no creaste ninguna playlist")
 }

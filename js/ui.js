@@ -191,23 +191,37 @@ export function renderDetallePlaylist() {
     : `<ul class="lista-canciones-playlist">
         ${playlist.canciones.map((item) => `
           <li class="item-cancion-playlist">
-            <img
-              class="item-cancion-caratula"
-              src="${item.cancion.caratula}"
-              alt="Carátula de ${escaparHTML(item.cancion.titulo)}"
-            />
+            <img class="item-cancion-caratula" src="${item.cancion.caratula}" alt="Carátula de ${escaparHTML(item.cancion.titulo)}" />
             <div class="item-cancion-info">
               <p class="item-cancion-titulo">${escaparHTML(item.cancion.titulo)}</p>
               <p class="item-cancion-artista">${escaparHTML(item.cancion.artista)}</p>
             </div>
             <span class="item-cancion-duracion">${item.cancion.duracionLegible()}</span>
             <span class="item-cancion-fecha">Agregada: ${formatearFecha(item.fechaAgregada)}</span>
+            <button
+              type="button"
+              class="boton-quitar-cancion"
+              data-action="quitar-cancion"
+              data-playlist-id="${playlist.id}"
+              data-item-id="${item.id}"
+              data-titulo="${escaparHTML(item.cancion.titulo)}"
+              aria-label="Quitar de la playlist"
+            >×</button>
           </li>
         `).join('')}
       </ul>`;
 
   contenedor.innerHTML = `
-    <h2>${escaparHTML(playlist.nombre)}</h2>
+    <div class="detalle-playlist-header">
+      <h2>${escaparHTML(playlist.nombre)}</h2>
+      <button
+        type="button"
+        class="boton-eliminar-playlist"
+        data-action="eliminar-playlist"
+        data-playlist-id="${playlist.id}"
+        data-nombre="${escaparHTML(playlist.nombre)}"
+      >Eliminar playlist</button>
+    </div>
     ${contenidoCanciones}
   `;
 }
@@ -221,3 +235,29 @@ export function renderDetallePlaylist() {
     //}
   //`;
 //}
+
+export function renderModalConfirmacion() {
+  const contenedor = document.getElementById('modal-confirmacion');
+  const { modalConfirmacion } = getEstado();
+
+  if (!modalConfirmacion) {
+    contenedor.innerHTML = '';
+    contenedor.classList.remove('modal-overlay--visible');
+    return;
+  }
+
+  const mensaje = modalConfirmacion.tipo === 'playlist'
+    ? `¿Eliminar la playlist "${escaparHTML(modalConfirmacion.nombre)}"? Esta acción no se puede deshacer.`
+    : `¿Quitar "${escaparHTML(modalConfirmacion.nombre)}" de la playlist?`;
+
+  contenedor.classList.add('modal-overlay--visible');
+  contenedor.innerHTML = `
+    <div class="modal-dialogo" role="dialog" aria-modal="true">
+      <p class="modal-mensaje">${mensaje}</p>
+      <div class="modal-acciones">
+        <button type="button" class="modal-boton-cancelar" data-action="cancelar-modal">Cancelar</button>
+        <button type="button" class="modal-boton-confirmar" data-action="confirmar-modal">Confirmar</button>
+      </div>
+    </div>
+  `;
+}

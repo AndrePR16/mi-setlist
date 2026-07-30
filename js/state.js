@@ -9,6 +9,7 @@ let estado = {
   errorFormularioPlaylist: null,
   popoverAgregarAbiertoParaId: null,
   toast: null, // { texto: string } | null
+  modalConfirmacion: null, // { tipo: 'cancion' | 'playlist', playlistId, itemId?, nombre } | null
 };
 
 export function getEstado() {
@@ -117,4 +118,37 @@ export function setToast(texto) {
 
 export function limpiarToast() {
   estado = { ...estado, toast: null };
+}
+
+// --- HU-06: confirmación y borrado ---
+
+export function abrirModalConfirmacion(datos) {
+  estado = { ...estado, modalConfirmacion: datos };
+}
+
+export function cerrarModalConfirmacion() {
+  estado = { ...estado, modalConfirmacion: null };
+}
+
+export function quitarCancionDePlaylist(playlistId, itemId) {
+  estado = {
+    ...estado,
+    playlists: estado.playlists.map((p) =>
+      p.id === playlistId
+        ? { ...p, canciones: p.canciones.filter((item) => item.id !== itemId) }
+        : p
+    ),
+    modalConfirmacion: null,
+  };
+}
+
+export function eliminarPlaylist(playlistId) {
+  const eraSeleccionada = estado.playlistSeleccionadaId === playlistId;
+
+  estado = {
+    ...estado,
+    playlists: estado.playlists.filter((p) => p.id !== playlistId),
+    playlistSeleccionadaId: eraSeleccionada ? null : estado.playlistSeleccionadaId,
+    modalConfirmacion: null,
+  };
 }

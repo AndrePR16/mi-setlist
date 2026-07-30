@@ -357,3 +357,31 @@ Chequeo contra los criterios de HU-05:
 
 Con esto se cierra el Sprint 1 completo (HU-01 a HU-05) con el flujo de punta a punta funcionando: buscar → crear playlist → agregar canción → ver el detalle real.
 ----------------------------------------------------------
+HU-06
+Ahora seguimos con la HU-06: Quitar canciones y eliminar playlists con confirmación (primero porque introduce el modal propio, una pieza de UI nueva que el resto del sprint no necesita pero que conviene tener resuelta temprano).
+Como usuario, quiero quitar canciones o eliminar playlists completas con una confirmación previa, **para** no perder información por error.
+Criterios de aceptación:
+- Al intentar quitar una canción o eliminar una playlist, se abre un modal propio (no `confirm()` del navegador) pidiendo confirmación.
+- El modal indica claramente qué se va a eliminar (nombre de canción o de playlist).
+- Si se confirma, el elemento desaparece de la pantalla inmediatamente; si se cancela, no cambia nada.
+- Al eliminar la última canción de una playlist, se vuelve a mostrar el estado vacío amigable.
+- Al eliminar una playlist, deja de aparecer en el listado general de playlists.
+
+P: ¿Cómo se ve la acción de quitar una canción dentro del detalle de playlist?
+R: Aparece solo al pasar el mouse sobre la fila (hover)
+
+P: Si eliminan la playlist que está actualmente seleccionada/abierta, ¿qué pasa con la vista de detalle?
+R: Queda deseleccionada (no se muestra ningún detalle, como al inicio)
+
+P: ¿El modal debería poder cerrarse haciendo clic afuera de él o con la tecla Esc?
+R: Sí, clic afuera del modal o tecla Esc lo cierran (como cancelar)
+
+Chequeo contra los criterios de HU-06:
+
+✅ Modal propio (no confirm() nativo) para ambas acciones.
+✅ El modal indica el nombre exacto (de la canción o de la playlist) en su mensaje.
+✅ Confirmar → desaparece de inmediato; cancelar → nada cambia (el estado nunca se tocó hasta confirmar).
+✅ Al quitar la última canción, playlist.canciones.length === 0 vuelve a ser true, así que renderDetallePlaylist muestra el estado vacío automáticamente — sin código extra.
+✅ Al eliminar una playlist, .filter() la saca del array, así que desaparece de #lista-playlists en el próximo render.
+✅ Bonus de tus decisiones: hover-only en canciones, deselección automática, Esc/clic-afuera cierran el modal.
+--------------------------------------------------------------------------

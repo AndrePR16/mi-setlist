@@ -429,3 +429,112 @@ button:disabled {
 .popover-form-nueva-playlist button:hover {
   background: #5a4bd1;
 }
+
+.detalle-playlist-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.detalle-playlist-header h2 {
+  margin: 0;
+}
+
+.boton-eliminar-playlist {
+  padding: 0.35rem 0.9rem;
+  border: 1px solid #d64545;
+  border-radius: 999px;
+  background: #fff;
+  color: #d64545;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.boton-eliminar-playlist:hover {
+  background: #d64545;
+  color: #fff;
+}
+
+.boton-quitar-cancion {
+  opacity: 0;
+  margin-left: auto;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: none;
+  background: transparent;
+  color: #999;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: opacity 0.15s, background 0.15s, color 0.15s;
+}
+
+.item-cancion-playlist:hover .boton-quitar-cancion {
+  opacity: 1;
+}
+
+.boton-quitar-cancion:hover {
+  background: #fdecea;
+  color: #d64545;
+}
+
+.modal-overlay {
+  display: none;
+}
+
+.modal-overlay--visible {
+  display: flex;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+
+.modal-dialogo {
+  background: #fff;
+  border-radius: 10px;
+  padding: 1.25rem;
+  max-width: 360px;
+  width: 90%;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+}
+
+.modal-mensaje {
+  margin: 0 0 1rem;
+  font-size: 0.95rem;
+  color: #333;
+}
+
+.modal-acciones {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+
+.modal-boton-cancelar {
+  padding: 0.5rem 1rem;
+  border: 1px solid #ddd;
+  border-radius: 999px;
+  background: #fff;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.modal-boton-confirmar {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 999px;
+  background: #d64545;
+  color: #fff;
+  font-weight: 600;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.modal-boton-confirmar:hover {
+  background: #b83a3a;
+}
