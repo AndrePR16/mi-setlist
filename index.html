@@ -10,7 +10,13 @@
 
 <body>
     <h1>🎵 Mi Setlist</h1>
-    <p id="app"></p>
+    <div class="control-tema">
+        <label class="switch-tema">
+            <input type="checkbox" id="toggle-tema" />
+            <span class="switch-tema-slider"></span>
+        </label>
+    </div>
+    <div id="app"></div>
     <form id="form-busqueda" class="form-busqueda">
         <input type="text" id="input-busqueda" name="busqueda" placeholder="Buscar por artista o título..."
             autocomplete="off" />

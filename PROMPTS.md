@@ -475,3 +475,48 @@ Chequeo contra los criterios de HU-09:
 ✅ No altera los datos originales: ordenarCanciones siempre trabaja sobre [...canciones], playlist.canciones en el estado nunca se toca por .sort().
 ✅ Bonus de tu tercera decisión: el criterio vuelve a 'antiguas' cada vez que se selecciona o crea una playlist.
 ----------------------------------------------------------------------------------
+HU-10
+Sigamos con la HU-10: Persistir todo y recuperarse de datos corruptos (al final, deliberadamente: envuelve la forma final del estado —playlists, canciones, fechas, orden— así que conviene implementarla cuando ya no va a cambiar la estructura de datos).
+Criterios de aceptación:
+- Al recargar la página, todas las playlists, sus canciones y fechas de agregado siguen presentes tal como estaban.
+- Si los datos guardados están corruptos o dañados, la app no se rompe ni queda en blanco.
+- Ante datos corruptos, se muestra una pantalla o mensaje ofreciendo la opción "Empezar de cero".
+- Al elegir "Empezar de cero", la app queda en un estado inicial limpio y utilizable (sin playlists, listo para crear nuevas).
+
+P: Te propongo persistir SOLO las playlists (nombre, canciones, fechas) — es lo más fácil de explicar porque es 'lo único que el usuario no quiere perder'. ¿Te sirve así?
+R: Sí, así está bien: solo las playlists persisten, la búsqueda siempre arranca vacía
+
+P: Te propongo guardar automáticamente cada vez que cambian las playlists (crear, agregar, quitar, eliminar) — es lo más fácil de explicar: 'cada vez que algo cambia, se guarda'. ¿Te sirve así?
+R: Sí, así está bien: se guarda solo después de cambios en playlists
+
+Chequeo contra los criterios de HU-10:
+
+✅ Al recargar, las playlists con sus canciones y fechas siguen ahí (se guardan en cada cambio, se leen y reconstruyen al cargar).
+✅ Datos corruptos → JSON.parse o la reconstrucción fallan, se atrapan con try/catch, la app no se rompe.
+✅ Se muestra pantalla con botón "Empezar de cero".
+✅ Al presionarlo, se borra localStorage y se recarga la página — queda como recién instalada, lista para crear playlists de nuevo.
+----------------------------------------------------------------------------------
+Ahora viene la implementación de 2 HU nuevas, una te dije que sería el modo oscuro y creo que la otra sería el de Favoritos, que se represente por el ícono de una estrella en la canción, vista o filtros.
+
+hagamos un ajuste, en el modo oscuro, se puede habilitar en caso la preferencia del sistema sea claro, en caso la preferencia del sistema este oscuro, la aplicación se muestra oscura. Si no, de igual forma se puede habilitar el modo oscuro. me dejé entender?
+
+P: Para el modo oscuro: ¿cómo imaginás el control para cambiarlo?
+R: Switch/toggle más tradicional
+
+P: Para favoritos: ¿cómo querés que se vea el filtro de 'solo favoritas' dentro de una playlist?
+R: Filtro tipo pill, junto a las de ordenar (HU-09)
+
+P: ¿Por cuál de las dos empezamos a programar?
+R: Sí, empezamos por HU-11 (modo oscuro)
+
+Repasando los 4 criterios que definimos para HU-11:
+
+✅ "Si el usuario nunca cambió el tema manualmente, la app respeta la preferencia del sistema operativo (claro u oscuro)."
+Lo cumple obtenerTemaInicial(): si no hay nada en localStorage, consulta window.matchMedia('(prefers-color-scheme: dark)').matches y arranca en oscuro o claro según lo que diga el sistema.
+✅ "El control para cambiar de tema está siempre visible y disponible, sin importar la preferencia del sistema."
+El switch (#toggle-tema) está en el HTML de forma fija, siempre presente, sin ningún if que lo oculte según el tema actual.
+✅ "Una vez que el usuario elige un tema manualmente, esa elección se guarda y prevalece sobre la preferencia del sistema en visitas futuras."
+Lo cumple manejarCambioTema(): guarda 'oscuro' o 'claro' en localStorage, y obtenerTemaInicial() siempre revisa primero si hay algo guardado ahí antes de mirar la preferencia del sistema — por eso la elección manual gana.
+✅ "El cambio de tema es inmediato, sin recargar la página."
+aplicarTema() solo agrega/saca la clase tema-oscuro del <body> con classList.toggle(...) — el CSS reacciona al instante porque las variables cambian de valor apenas cambia esa clase, sin ningún location.reload().
+---------------------------------------------------------------------------

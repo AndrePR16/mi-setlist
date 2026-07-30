@@ -1,3 +1,99 @@
+/* === Variables de color (tema claro por defecto) === */
+:root {
+  --color-fondo: #ffffff;
+  --color-fondo-secundario: #f7f7f7;
+  --color-superficie: #ffffff;
+  --color-texto: #222222;
+  --color-texto-secundario: #666666;
+  --color-texto-terciario: #999999;
+  --color-borde: #dddddd;
+  --color-borde-suave: #eeeeee;
+  --color-acento: #6c5ce7;
+  --color-acento-hover: #5a4bd1;
+  --color-acento-suave: rgba(108, 92, 231, 0.15);
+  --color-peligro: #d64545;
+  --color-peligro-hover: #b83a3a;
+  --color-peligro-fondo: #fdecea;
+  --sombra-modal: rgba(0, 0, 0, 0.2);
+  --sombra-popover: rgba(0, 0, 0, 0.12);
+}
+
+/* === Overrides cuando el body tiene la clase tema-oscuro === */
+body.tema-oscuro {
+  --color-fondo: #121212;
+  --color-fondo-secundario: #1e1e1e;
+  --color-superficie: #1e1e1e;
+  --color-texto: #eaeaea;
+  --color-texto-secundario: #aaaaaa;
+  --color-texto-terciario: #888888;
+  --color-borde: #333333;
+  --color-borde-suave: #2a2a2a;
+  --color-acento: #8b7bf0;
+  --color-acento-hover: #a292f5;
+  --color-acento-suave: rgba(139, 123, 240, 0.25);
+  --color-peligro: #e57373;
+  --color-peligro-hover: #ef9a9a;
+  --color-peligro-fondo: #3a2323;
+  --sombra-modal: rgba(0, 0, 0, 0.6);
+  --sombra-popover: rgba(0, 0, 0, 0.5);
+}
+
+body {
+  background: var(--color-fondo);
+  color: var(--color-texto);
+  transition: background 0.2s, color 0.2s;
+}
+
+/* === Control de tema (switch) === */
+.control-tema {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 1rem;
+}
+
+.switch-tema {
+  position: relative;
+  display: inline-block;
+  width: 44px;
+  height: 24px;
+}
+
+.switch-tema input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.switch-tema-slider {
+  position: absolute;
+  inset: 0;
+  background: var(--color-borde);
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.switch-tema-slider::before {
+  content: "";
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  left: 3px;
+  top: 3px;
+  background: #fff;
+  border-radius: 50%;
+  transition: transform 0.2s;
+}
+
+.switch-tema input:checked + .switch-tema-slider {
+  background: var(--color-acento);
+}
+
+.switch-tema input:checked + .switch-tema-slider::before {
+  transform: translateX(20px);
+}
+
+/* === Búsqueda === */
 .form-busqueda {
   display: flex;
   gap: 0.5rem;
@@ -8,22 +104,25 @@
 #input-busqueda {
   flex: 1;
   padding: 0.7rem 1.1rem;
-  border: 1px solid #ddd;
+  border: 1px solid var(--color-borde);
   border-radius: 999px;
   font-size: 0.95rem;
   outline: none;
+  background: var(--color-superficie);
+  color: var(--color-texto);
   transition: border-color 0.15s, box-shadow 0.15s;
 }
 
 #input-busqueda:focus {
-  border-color: #6c5ce7;
-  box-shadow: 0 0 0 3px rgba(108, 92, 231, 0.15);
+  border-color: var(--color-acento);
+  box-shadow: 0 0 0 3px var(--color-acento-suave);
 }
+
 #boton-buscar {
   padding: 0.7rem 1.6rem;
   border: none;
   border-radius: 999px;
-  background: #6c5ce7;
+  background: var(--color-acento);
   color: #fff;
   font-weight: 600;
   font-size: 0.9rem;
@@ -32,32 +131,30 @@
 }
 
 #boton-buscar:hover {
-  background: #5a4bd1;
+  background: var(--color-acento-hover);
 }
 
-/* ANTES tenía display: grid sin columnas — se reemplaza por lista vertical compacta */
+/* === Resultados de búsqueda (estilo compacto) === */
 .lista-resultados {
   display: flex;
   flex-direction: column;
   gap: 0;
 }
 
-/* Se reemplaza toda la regla .tarjeta-cancion */
 .tarjeta-cancion {
   display: flex;
   align-items: center;
   gap: 0.75rem;
   padding: 0.4rem 0.25rem;
   border: none;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid var(--color-borde-suave);
   border-radius: 0;
 }
 
 .tarjeta-cancion:hover {
-  background: #f7f7f7;
+  background: var(--color-fondo-secundario);
 }
 
-/* Se reemplaza: carátula más chica, como en YT Music */
 .tarjeta-caratula {
   width: 44px;
   height: 44px;
@@ -66,7 +163,6 @@
   flex-shrink: 0;
 }
 
-/* Se reemplaza: info más angosta, con truncado de texto largo */
 .tarjeta-info {
   display: flex;
   flex-direction: column;
@@ -85,21 +181,21 @@
 
 .tarjeta-artista {
   font-size: 0.8rem;
-  color: #666;
+  color: var(--color-texto-secundario);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-/* Nueva: la duración pasa a ser una columna fija a la derecha, en vez de otra línea de texto debajo */
 .tarjeta-duracion {
   font-size: 0.8rem;
-  color: #888;
+  color: var(--color-texto-terciario);
   flex-shrink: 0;
   width: 3.5rem;
   text-align: right;
 }
 
+/* === Estado de búsqueda === */
 .zona-estado {
   min-height: 1.5rem;
   margin-bottom: 1rem;
@@ -115,17 +211,17 @@
 }
 
 .mensaje-cargando {
-  color: #444;
+  color: var(--color-texto-secundario);
 }
 
 .mensaje-error {
-  background: #fdecea;
-  color: #a12b1f;
+  background: var(--color-peligro-fondo);
+  color: var(--color-peligro);
 }
 
 .mensaje-vacio {
-  background: #f3f3f3;
-  color: #555;
+  background: var(--color-fondo-secundario);
+  color: var(--color-texto-secundario);
 }
 
 .boton-reintentar {
@@ -141,8 +237,8 @@
 .spinner {
   width: 14px;
   height: 14px;
-  border: 2px solid #ccc;
-  border-top-color: #444;
+  border: 2px solid var(--color-borde);
+  border-top-color: var(--color-texto-secundario);
   border-radius: 50%;
   animation: girar 0.6s linear infinite;
 }
@@ -156,9 +252,10 @@ button:disabled {
   cursor: not-allowed;
 }
 
+/* === Playlists === */
 .seccion-playlists {
   margin-top: 2rem;
-  border-top: 1px solid #eee;
+  border-top: 1px solid var(--color-borde-suave);
   padding-top: 1.5rem;
 }
 
@@ -176,10 +273,10 @@ button:disabled {
 
 #boton-nueva-playlist {
   padding: 0.5rem 1.1rem;
-  border: 1px solid #6c5ce7;
+  border: 1px solid var(--color-acento);
   border-radius: 999px;
-  background: #fff;
-  color: #6c5ce7;
+  background: var(--color-superficie);
+  color: var(--color-acento);
   font-weight: 600;
   font-size: 0.85rem;
   cursor: pointer;
@@ -187,7 +284,7 @@ button:disabled {
 }
 
 #boton-nueva-playlist:hover {
-  background: #6c5ce7;
+  background: var(--color-acento);
   color: #fff;
 }
 
@@ -203,22 +300,24 @@ button:disabled {
   flex: 1;
   min-width: 200px;
   padding: 0.55rem 0.9rem;
-  border: 1px solid #ddd;
+  border: 1px solid var(--color-borde);
   border-radius: 999px;
   font-size: 0.9rem;
   outline: none;
+  background: var(--color-superficie);
+  color: var(--color-texto);
 }
 
 .form-playlist input:focus {
-  border-color: #6c5ce7;
-  box-shadow: 0 0 0 3px rgba(108, 92, 231, 0.15);
+  border-color: var(--color-acento);
+  box-shadow: 0 0 0 3px var(--color-acento-suave);
 }
 
 .form-playlist button {
   padding: 0.55rem 1.2rem;
   border: none;
   border-radius: 999px;
-  background: #6c5ce7;
+  background: var(--color-acento);
   color: #fff;
   font-weight: 600;
   font-size: 0.85rem;
@@ -234,31 +333,72 @@ button:disabled {
 
 .item-playlist {
   padding: 0.4rem 0.9rem;
-  border: 1px solid #ddd;
+  border: 1px solid var(--color-borde);
   border-radius: 999px;
-  background: #fff;
+  background: var(--color-superficie);
+  color: var(--color-texto);
   cursor: pointer;
   font-size: 0.85rem;
   transition: background 0.15s, color 0.15s, border-color 0.15s;
 }
 
 .item-playlist:hover {
-  border-color: #6c5ce7;
+  border-color: var(--color-acento);
 }
 
 .item-playlist--activa {
-  background: #6c5ce7;
+  background: var(--color-acento);
   color: #fff;
-  border-color: #6c5ce7;
+  border-color: var(--color-acento);
 }
 
 .detalle-playlist {
   padding: 1rem;
-  border: 1px solid #eee;
+  border: 1px solid var(--color-borde-suave);
   border-radius: 8px;
   min-height: 3rem;
 }
 
+.detalle-playlist-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.detalle-playlist-titulo {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+}
+
+.detalle-playlist-titulo h2 {
+  margin: 0;
+}
+
+.detalle-playlist-duracion {
+  font-size: 0.85rem;
+  color: var(--color-texto-terciario);
+  font-weight: 500;
+}
+
+.boton-eliminar-playlist {
+  padding: 0.35rem 0.9rem;
+  border: 1px solid var(--color-peligro);
+  border-radius: 999px;
+  background: var(--color-superficie);
+  color: var(--color-peligro);
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.boton-eliminar-playlist:hover {
+  background: var(--color-peligro);
+  color: #fff;
+}
+
+/* === Agregar canción a playlist (popover) === */
 .tarjeta-acciones {
   position: relative;
   margin-left: auto;
@@ -267,25 +407,27 @@ button:disabled {
 .boton-agregar {
   padding: 0.35rem 0.9rem;
   border-radius: 999px;
-  border: 1px solid #ccc;
-  background: #fff;
+  border: 1px solid var(--color-borde);
+  background: var(--color-superficie);
+  color: var(--color-texto);
   font-size: 0.8rem;
   font-weight: 600;
   cursor: pointer;
   flex-shrink: 0;
 }
+
 .boton-agregar:hover {
-  background: #f3f3f3;
+  background: var(--color-fondo-secundario);
 }
 
 .popover-agregar {
   position: absolute;
   right: 0;
   top: 2.2rem;
-  background: #fff;
-  border: 1px solid #ddd;
+  background: var(--color-superficie);
+  border: 1px solid var(--color-borde);
   border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+  box-shadow: 0 4px 12px var(--sombra-popover);
   padding: 0.5rem;
   min-width: 180px;
   z-index: 10;
@@ -299,28 +441,64 @@ button:disabled {
   padding: 0.4rem 0.5rem;
   border: none;
   background: transparent;
+  color: var(--color-texto);
   cursor: pointer;
   border-radius: 4px;
 }
 
 .popover-item-playlist:hover {
-  background: #f3f3f3;
+  background: var(--color-fondo-secundario);
 }
 
 .popover-vacio {
   font-size: 0.85rem;
-  color: #777;
+  color: var(--color-texto-secundario);
   padding: 0.25rem 0.5rem;
 }
 
 .popover-form-nueva-playlist {
   display: flex;
   gap: 0.25rem;
-  border-top: 1px solid #eee;
+  border-top: 1px solid var(--color-borde-suave);
   padding-top: 0.4rem;
   margin-top: 0.2rem;
 }
 
+.popover-form-nueva-playlist input {
+  flex: 1;
+  min-width: 0;
+  padding: 0.4rem 0.7rem;
+  border: 1px solid var(--color-borde);
+  border-radius: 999px;
+  font-size: 0.8rem;
+  outline: none;
+  background: var(--color-superficie);
+  color: var(--color-texto);
+}
+
+.popover-form-nueva-playlist input:focus {
+  border-color: var(--color-acento);
+  box-shadow: 0 0 0 2px var(--color-acento-suave);
+}
+
+.popover-form-nueva-playlist button {
+  padding: 0.4rem 0.8rem;
+  border: none;
+  border-radius: 999px;
+  background: var(--color-acento);
+  color: #fff;
+  font-weight: 600;
+  font-size: 0.75rem;
+  cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.popover-form-nueva-playlist button:hover {
+  background: var(--color-acento-hover);
+}
+
+/* === Toast === */
 .toast {
   position: fixed;
   bottom: 1.5rem;
@@ -340,6 +518,53 @@ button:disabled {
   transform: translateX(-50%) translateY(0);
 }
 
+/* === Estadísticas de playlist (HU-08) === */
+.estadisticas-playlist {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  padding: 0.6rem 0;
+  margin-bottom: 0.75rem;
+  border-bottom: 1px solid var(--color-borde-suave);
+  font-size: 0.85rem;
+  color: var(--color-texto-secundario);
+}
+
+.estadistica-item strong {
+  color: var(--color-texto);
+  font-weight: 600;
+}
+
+/* === Control de orden (HU-09) === */
+.control-orden {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-bottom: 0.75rem;
+}
+
+.pill-orden {
+  padding: 0.3rem 0.7rem;
+  border: 1px solid var(--color-borde);
+  border-radius: 999px;
+  background: var(--color-superficie);
+  color: var(--color-texto);
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+
+.pill-orden:hover {
+  border-color: var(--color-acento);
+}
+
+.pill-orden--activa {
+  background: var(--color-acento);
+  color: #fff;
+  border-color: var(--color-acento);
+}
+
+/* === Canciones dentro de una playlist === */
 .lista-canciones-playlist {
   list-style: none;
   padding: 0;
@@ -354,7 +579,7 @@ button:disabled {
   align-items: center;
   gap: 0.75rem;
   padding: 0.4rem 0;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid var(--color-borde-suave);
 }
 
 .item-cancion-caratula {
@@ -382,79 +607,20 @@ button:disabled {
 
 .item-cancion-artista {
   font-size: 0.8rem;
-  color: #666;
+  color: var(--color-texto-secundario);
 }
 
 .item-cancion-duracion {
   font-size: 0.85rem;
-  color: #444;
+  color: var(--color-texto);
   flex-shrink: 0;
 }
 
 .item-cancion-fecha {
   font-size: 0.75rem;
-  color: #999;
+  color: var(--color-texto-terciario);
   flex-shrink: 0;
   white-space: nowrap;
-}
-
-.popover-form-nueva-playlist input {
-  flex: 1;
-  min-width: 0;
-  padding: 0.4rem 0.7rem;
-  border: 1px solid #ddd;
-  border-radius: 999px;
-  font-size: 0.8rem;
-  outline: none;
-}
-
-.popover-form-nueva-playlist input:focus {
-  border-color: #6c5ce7;
-  box-shadow: 0 0 0 2px rgba(108, 92, 231, 0.15);
-}
-
-.popover-form-nueva-playlist button {
-  padding: 0.4rem 0.8rem;
-  border: none;
-  border-radius: 999px;
-  background: #6c5ce7;
-  color: #fff;
-  font-weight: 600;
-  font-size: 0.75rem;
-  cursor: pointer;
-  white-space: nowrap;
-  flex-shrink: 0;
-}
-
-.popover-form-nueva-playlist button:hover {
-  background: #5a4bd1;
-}
-
-.detalle-playlist-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 0.5rem;
-}
-
-.detalle-playlist-header h2 {
-  margin: 0;
-}
-
-.boton-eliminar-playlist {
-  padding: 0.35rem 0.9rem;
-  border: 1px solid #d64545;
-  border-radius: 999px;
-  background: #fff;
-  color: #d64545;
-  font-size: 0.8rem;
-  font-weight: 600;
-  cursor: pointer;
-}
-
-.boton-eliminar-playlist:hover {
-  background: #d64545;
-  color: #fff;
 }
 
 .boton-quitar-cancion {
@@ -465,7 +631,7 @@ button:disabled {
   border-radius: 50%;
   border: none;
   background: transparent;
-  color: #999;
+  color: var(--color-texto-terciario);
   font-size: 1rem;
   cursor: pointer;
   transition: opacity 0.15s, background 0.15s, color 0.15s;
@@ -476,10 +642,11 @@ button:disabled {
 }
 
 .boton-quitar-cancion:hover {
-  background: #fdecea;
-  color: #d64545;
+  background: var(--color-peligro-fondo);
+  color: var(--color-peligro);
 }
 
+/* === Modal de confirmación (HU-06) === */
 .modal-overlay {
   display: none;
 }
@@ -495,18 +662,19 @@ button:disabled {
 }
 
 .modal-dialogo {
-  background: #fff;
+  background: var(--color-superficie);
+  color: var(--color-texto);
   border-radius: 10px;
   padding: 1.25rem;
   max-width: 360px;
   width: 90%;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 8px 24px var(--sombra-modal);
 }
 
 .modal-mensaje {
   margin: 0 0 1rem;
   font-size: 0.95rem;
-  color: #333;
+  color: var(--color-texto);
 }
 
 .modal-acciones {
@@ -517,9 +685,10 @@ button:disabled {
 
 .modal-boton-cancelar {
   padding: 0.5rem 1rem;
-  border: 1px solid #ddd;
+  border: 1px solid var(--color-borde);
   border-radius: 999px;
-  background: #fff;
+  background: var(--color-superficie);
+  color: var(--color-texto);
   font-size: 0.85rem;
   cursor: pointer;
 }
@@ -528,7 +697,7 @@ button:disabled {
   padding: 0.5rem 1rem;
   border: none;
   border-radius: 999px;
-  background: #d64545;
+  background: var(--color-peligro);
   color: #fff;
   font-weight: 600;
   font-size: 0.85rem;
@@ -536,64 +705,34 @@ button:disabled {
 }
 
 .modal-boton-confirmar:hover {
-  background: #b83a3a;
+  background: var(--color-peligro-hover);
 }
 
-.detalle-playlist-titulo {
-  display: flex;
-  align-items: baseline;
-  gap: 0.6rem;
+/* === Pantalla de recuperación (HU-10) === */
+.pantalla-recuperacion {
+  max-width: 400px;
+  margin: 3rem auto;
+  padding: 1.5rem;
+  border: 1px solid var(--color-borde-suave);
+  border-radius: 10px;
+  text-align: center;
 }
 
-.detalle-playlist-titulo h2 {
-  margin: 0;
+.pantalla-recuperacion p {
+  margin-bottom: 1rem;
+  color: var(--color-texto-secundario);
 }
 
-.detalle-playlist-duracion {
-  font-size: 0.85rem;
-  color: #888;
-  font-weight: 500;
-}
-
-.estadisticas-playlist {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
-  padding: 0.6rem 0;
-  margin-bottom: 0.75rem;
-  border-bottom: 1px solid #eee;
-  font-size: 0.85rem;
-  color: #666;
-}
-
-.estadistica-item strong {
-  color: #333;
-  font-weight: 600;
-}
-
-.control-orden {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.4rem;
-  margin-bottom: 0.75rem;
-}
-
-.pill-orden {
-  padding: 0.3rem 0.7rem;
-  border: 1px solid #ddd;
+#boton-empezar-de-cero {
+  padding: 0.6rem 1.4rem;
+  border: none;
   border-radius: 999px;
-  background: #fff;
-  font-size: 0.75rem;
-  cursor: pointer;
-  transition: background 0.15s, color 0.15s, border-color 0.15s;
-}
-
-.pill-orden:hover {
-  border-color: #6c5ce7;
-}
-
-.pill-orden--activa {
-  background: #6c5ce7;
+  background: var(--color-acento);
   color: #fff;
-  border-color: #6c5ce7;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+body.modo-recuperacion > *:not(#app) {
+  display: none;
 }

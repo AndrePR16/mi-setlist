@@ -376,3 +376,13 @@ function renderControlOrden() {
     </div>
   `;
 }
+
+export function renderPantallaRecuperacion() {
+  const contenedor = document.getElementById('app');
+  contenedor.innerHTML = `
+    <div class="pantalla-recuperacion">
+      <p>Hubo un problema al leer tus datos guardados y no pudimos recuperarlos.</p>
+      <button type="button" id="boton-empezar-de-cero">Empezar de cero</button>
+    </div>
+  `;
+}

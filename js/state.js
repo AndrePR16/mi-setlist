@@ -1,3 +1,5 @@
+import { guardarPlaylists } from './storage.js';
+
 let estado = {
   terminoBusqueda: '',
   resultadosBusqueda: [],
@@ -65,8 +67,10 @@ export function crearPlaylist(nombre) {
     playlistSeleccionadaId: nuevaPlaylist.id,
     mostrarFormularioPlaylist: false,
     errorFormularioPlaylist: null,
-    criterioOrdenPlaylist: 'antiguas', // ← nuevo: la playlist recién creada arranca en orden por defecto
+    criterioOrdenPlaylist: 'antiguas',
   };
+
+  guardarPlaylists(estado.playlists); // ← nuevo
 
   return nuevaPlaylist;
 }
@@ -115,6 +119,8 @@ export function agregarCancionAPlaylist(playlistId, cancion) {
     toast: { texto: `Agregada a ${playlist.nombre}` },
   };
 
+  guardarPlaylists(estado.playlists); // ← nuevo
+
   return { ok: true };
 }
 
@@ -146,6 +152,8 @@ export function quitarCancionDePlaylist(playlistId, itemId) {
     ),
     modalConfirmacion: null,
   };
+
+  guardarPlaylists(estado.playlists); // ← nuevo
 }
 
 export function eliminarPlaylist(playlistId) {
@@ -157,10 +165,17 @@ export function eliminarPlaylist(playlistId) {
     playlistSeleccionadaId: eraSeleccionada ? null : estado.playlistSeleccionadaId,
     modalConfirmacion: null,
   };
+
+  guardarPlaylists(estado.playlists); // ← nuevo
 }
 
 // --- HU-09: orden de canciones dentro de una playlist ---
 
 export function setCriterioOrdenPlaylist(criterio) {
   estado = { ...estado, criterioOrdenPlaylist: criterio };
+}
+
+// --- HU-10
+export function cargarPlaylistsEnEstado(playlists) {
+  estado = { ...estado, playlists };
 }
