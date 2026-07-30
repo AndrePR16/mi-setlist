@@ -53,7 +53,7 @@ export function renderResultados() {
         <p class="tarjeta-duracion">${cancion.duracionLegible()}</p>
       </div>
       <div class="tarjeta-acciones">
-        <button type="button" class="boton-agregar" data-action="toggle-agregar" data-cancion-id="${cancion.id}" aria-label="Agregar a playlist">+</button>
+        <button type="button" class="boton-agregar" data-action="toggle-agregar" data-cancion-id="${cancion.id}">Agregar</button>
         ${renderPopoverAgregar(cancion)}
       </div>
     </article>
@@ -167,6 +167,15 @@ export function renderListaPlaylists() {
   `).join('');
 }
 
+function formatearFecha(fecha) {
+  const dia = String(fecha.getDate()).padStart(2, '0');
+  const mes = String(fecha.getMonth() + 1).padStart(2, '0');
+  const anio = fecha.getFullYear();
+  const horas = String(fecha.getHours()).padStart(2, '0');
+  const minutos = String(fecha.getMinutes()).padStart(2, '0');
+  return `${dia}/${mes}/${anio} ${horas}:${minutos}`;
+}
+
 export function renderDetallePlaylist() {
   const contenedor = document.getElementById('detalle-playlist');
   const { playlists, playlistSeleccionadaId } = getEstado();
@@ -177,12 +186,38 @@ export function renderDetallePlaylist() {
     return;
   }
 
-  // Vista mínima para HU-03. El listado real de canciones llega en HU-05.
+  const contenidoCanciones = playlist.canciones.length === 0
+    ? `<p class="mensaje-estado mensaje-vacio">Todavía no agregaste canciones.</p>`
+    : `<ul class="lista-canciones-playlist">
+        ${playlist.canciones.map((item) => `
+          <li class="item-cancion-playlist">
+            <img
+              class="item-cancion-caratula"
+              src="${item.cancion.caratula}"
+              alt="Carátula de ${escaparHTML(item.cancion.titulo)}"
+            />
+            <div class="item-cancion-info">
+              <p class="item-cancion-titulo">${escaparHTML(item.cancion.titulo)}</p>
+              <p class="item-cancion-artista">${escaparHTML(item.cancion.artista)}</p>
+            </div>
+            <span class="item-cancion-duracion">${item.cancion.duracionLegible()}</span>
+            <span class="item-cancion-fecha">Agregada: ${formatearFecha(item.fechaAgregada)}</span>
+          </li>
+        `).join('')}
+      </ul>`;
+
   contenedor.innerHTML = `
     <h2>${escaparHTML(playlist.nombre)}</h2>
-    ${playlist.canciones.length === 0
-      ? `<p class="mensaje-estado mensaje-vacio">Todavía no agregaste canciones.</p>`
-      : ''
-    }
+    ${contenidoCanciones}
   `;
 }
+
+  // Vista mínima para HU-03. El listado real de canciones llega en HU-05.
+  //contenedor.innerHTML = `
+    //<h2>${escaparHTML(playlist.nombre)}</h2>
+    //${playlist.canciones.length === 0
+      //? `<p class="mensaje-estado mensaje-vacio">Todavía no agregaste canciones.</p>`
+     // : ''
+    //}
+  //`;
+//}

@@ -2,44 +2,102 @@
   display: flex;
   gap: 0.5rem;
   margin-bottom: 1.5rem;
+  align-items: center;
 }
 
+#input-busqueda {
+  flex: 1;
+  padding: 0.7rem 1.1rem;
+  border: 1px solid #ddd;
+  border-radius: 999px;
+  font-size: 0.95rem;
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+#input-busqueda:focus {
+  border-color: #6c5ce7;
+  box-shadow: 0 0 0 3px rgba(108, 92, 231, 0.15);
+}
+#boton-buscar {
+  padding: 0.7rem 1.6rem;
+  border: none;
+  border-radius: 999px;
+  background: #6c5ce7;
+  color: #fff;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+#boton-buscar:hover {
+  background: #5a4bd1;
+}
+
+/* ANTES tenía display: grid sin columnas — se reemplaza por lista vertical compacta */
 .lista-resultados {
-  display: grid;
-  gap: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
 }
 
+/* Se reemplaza toda la regla .tarjeta-cancion */
 .tarjeta-cancion {
   display: flex;
   align-items: center;
-  gap: 1rem;
-  padding: 0.5rem;
-  border: 1px solid #ddd;
-  border-radius: 8px;
+  gap: 0.75rem;
+  padding: 0.4rem 0.25rem;
+  border: none;
+  border-bottom: 1px solid #eee;
+  border-radius: 0;
 }
 
+.tarjeta-cancion:hover {
+  background: #f7f7f7;
+}
+
+/* Se reemplaza: carátula más chica, como en YT Music */
 .tarjeta-caratula {
-  width: 56px;
-  height: 56px;
+  width: 44px;
+  height: 44px;
   border-radius: 4px;
   object-fit: cover;
   flex-shrink: 0;
 }
 
+/* Se reemplaza: info más angosta, con truncado de texto largo */
 .tarjeta-info {
   display: flex;
   flex-direction: column;
-  gap: 0.15rem;
+  gap: 0.1rem;
+  min-width: 0;
+  flex: 1;
 }
 
 .tarjeta-titulo {
   font-weight: 600;
+  font-size: 0.9rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.tarjeta-artista,
-.tarjeta-duracion {
-  font-size: 0.85rem;
+.tarjeta-artista {
+  font-size: 0.8rem;
   color: #666;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Nueva: la duración pasa a ser una columna fija a la derecha, en vez de otra línea de texto debajo */
+.tarjeta-duracion {
+  font-size: 0.8rem;
+  color: #888;
+  flex-shrink: 0;
+  width: 3.5rem;
+  text-align: right;
 }
 
 .zona-estado {
@@ -111,12 +169,60 @@ button:disabled {
   margin-bottom: 1rem;
 }
 
+.cabecera-playlists h2 {
+  font-size: 1.1rem;
+  margin: 0;
+}
+
+#boton-nueva-playlist {
+  padding: 0.5rem 1.1rem;
+  border: 1px solid #6c5ce7;
+  border-radius: 999px;
+  background: #fff;
+  color: #6c5ce7;
+  font-weight: 600;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+
+#boton-nueva-playlist:hover {
+  background: #6c5ce7;
+  color: #fff;
+}
+
 .form-playlist {
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem;
   align-items: center;
   margin-bottom: 1rem;
+}
+
+.form-playlist input {
+  flex: 1;
+  min-width: 200px;
+  padding: 0.55rem 0.9rem;
+  border: 1px solid #ddd;
+  border-radius: 999px;
+  font-size: 0.9rem;
+  outline: none;
+}
+
+.form-playlist input:focus {
+  border-color: #6c5ce7;
+  box-shadow: 0 0 0 3px rgba(108, 92, 231, 0.15);
+}
+
+.form-playlist button {
+  padding: 0.55rem 1.2rem;
+  border: none;
+  border-radius: 999px;
+  background: #6c5ce7;
+  color: #fff;
+  font-weight: 600;
+  font-size: 0.85rem;
+  cursor: pointer;
 }
 
 .lista-playlists {
@@ -127,17 +233,23 @@ button:disabled {
 }
 
 .item-playlist {
-  padding: 0.4rem 0.8rem;
-  border: 1px solid #ccc;
+  padding: 0.4rem 0.9rem;
+  border: 1px solid #ddd;
   border-radius: 999px;
   background: #fff;
   cursor: pointer;
+  font-size: 0.85rem;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+
+.item-playlist:hover {
+  border-color: #6c5ce7;
 }
 
 .item-playlist--activa {
-  background: #333;
+  background: #6c5ce7;
   color: #fff;
-  border-color: #333;
+  border-color: #6c5ce7;
 }
 
 .detalle-playlist {
@@ -153,13 +265,17 @@ button:disabled {
 }
 
 .boton-agregar {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
+  padding: 0.35rem 0.9rem;
+  border-radius: 999px;
   border: 1px solid #ccc;
   background: #fff;
-  font-size: 1.1rem;
+  font-size: 0.8rem;
+  font-weight: 600;
   cursor: pointer;
+  flex-shrink: 0;
+}
+.boton-agregar:hover {
+  background: #f3f3f3;
 }
 
 .popover-agregar {
@@ -222,4 +338,94 @@ button:disabled {
 .toast--visible {
   opacity: 1;
   transform: translateX(-50%) translateY(0);
+}
+
+.lista-canciones-playlist {
+  list-style: none;
+  padding: 0;
+  margin: 0.75rem 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.item-cancion-playlist {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.4rem 0;
+  border-bottom: 1px solid #eee;
+}
+
+.item-cancion-caratula {
+  width: 36px;
+  height: 36px;
+  border-radius: 4px;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.item-cancion-info {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  flex: 1;
+}
+
+.item-cancion-titulo {
+  font-weight: 600;
+  font-size: 0.9rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.item-cancion-artista {
+  font-size: 0.8rem;
+  color: #666;
+}
+
+.item-cancion-duracion {
+  font-size: 0.85rem;
+  color: #444;
+  flex-shrink: 0;
+}
+
+.item-cancion-fecha {
+  font-size: 0.75rem;
+  color: #999;
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+.popover-form-nueva-playlist input {
+  flex: 1;
+  min-width: 0;
+  padding: 0.4rem 0.7rem;
+  border: 1px solid #ddd;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  outline: none;
+}
+
+.popover-form-nueva-playlist input:focus {
+  border-color: #6c5ce7;
+  box-shadow: 0 0 0 2px rgba(108, 92, 231, 0.15);
+}
+
+.popover-form-nueva-playlist button {
+  padding: 0.4rem 0.8rem;
+  border: none;
+  border-radius: 999px;
+  background: #6c5ce7;
+  color: #fff;
+  font-weight: 600;
+  font-size: 0.75rem;
+  cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.popover-form-nueva-playlist button:hover {
+  background: #5a4bd1;
 }

@@ -324,3 +324,36 @@ Chequeo contra los criterios de HU-04:
 ✅ Duplicado exacto → se avisa (toast) y no se agrega de nuevo; nunca duplica sin control ni rompe pantalla.
 ✅ Bonus de tu tercera decisión: sin playlists, se puede crear una al vuelo y queda agregada en el mismo paso.
 -------------------------------------------------------------------
+HU-05:
+Sigamos con la misma estructura para HU-05:  Ver el contenido de una playlist (cierra el sprint como la prueba visual de que HU-03 y HU-04 realmente funcionan de punta a punta).
+Como usuario, quiero ver el detalle de una playlist, para revisar qué canciones tiene y cuándo las agregué.
+Criterios de aceptación:
+- Al seleccionar una playlist, se muestra la lista de sus canciones con carátula, nombre, artista y duración.
+- Cada canción muestra la fecha (y idealmente hora) en que fue agregada, en formato legible (no timestamp crudo).
+- Si la playlist no tiene canciones, se ve el estado vacío amigable en lugar de una lista en blanco.
+- El nombre de la playlist seleccionada es visible como título de la vista de detalle.
+
+P: ¿En qué formato querés mostrar la fecha en que se agregó cada canción?
+R: Fecha y hora absolutas (ej. '28/07/2026 14:30')
+
+P: Mientras no implementemos HU-09 (ordenar), ¿en qué orden por defecto querés ver las canciones dentro de una playlist?
+R: Orden de agregado (la más reciente agregada al final, como en un historial)
+
+P: ¿Querés que las canciones dentro de la playlist se vean con el mismo estilo de tarjeta que usamos en los resultados de búsqueda (HU-01)?
+R: Estilo más compacto tipo lista de texto, sin tarjetas grandes
+
+Con esas respuestas, así construimos HU-05 — y es una historia liviana en términos de archivos tocados, porque el estado y los datos (playlist.canciones, cada uno con su cancion y fechaAgregada) ya existen desde HU-04. Solo falta mostrarlos.
+
+Formato de fecha: como fechaAgregada ya es un objeto Date real (lo guardamos así en HU-04), armo un helper simple con los métodos nativos (getDate(), getMonth(), etc.) en vez de sumar una librería nueva — no hace falta para un formato tan sencillo.
+Orden por defecto: no necesito tocar nada de lógica — playlist.canciones ya es un array donde cada agregarCancionAPlaylist hace push (vía spread) al final, así que "más reciente al final" ya es el orden natural sin cambios.
+Estilo compacto: uso una lista <ul> con filas angostas en vez de reusar .tarjeta-cancion (que es más grande, pensada para resultados de búsqueda).
+
+Chequeo contra los criterios de HU-05:
+
+✅ Al seleccionar una playlist, se ve la lista de canciones con carátula, nombre, artista y duración.
+✅ Cada canción muestra fecha y hora de agregado, en formato legible (28/07/2026 14:30), no timestamp crudo.
+✅ Playlist sin canciones → sigue mostrando el estado vacío amigable (esa rama no la toqué).
+✅ El nombre de la playlist es el <h2> visible como título del detalle.
+
+Con esto se cierra el Sprint 1 completo (HU-01 a HU-05) con el flujo de punta a punta funcionando: buscar → crear playlist → agregar canción → ver el detalle real.
+----------------------------------------------------------
