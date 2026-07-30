@@ -385,3 +385,28 @@ Chequeo contra los criterios de HU-06:
 ✅ Al eliminar una playlist, .filter() la saca del array, así que desaparece de #lista-playlists en el próximo render.
 ✅ Bonus de tus decisiones: hover-only en canciones, deselección automática, Esc/clic-afuera cierran el modal.
 --------------------------------------------------------------------------
+HU-07
+Sigamos con la HU-07: Ver la duración total de una playlist (cálculo simple sobre datos que ya existen desde el sprint 1).
+Como usuario, quiero ver cuánto dura mi playlist en total, para saber si alcanza para un viaje, ensayo, etc.
+Criterios de aceptación:
+- En la vista de detalle de la playlist se muestra la duración total sumando todas las canciones.
+- El formato es legible para humanos (ej. "1 h 23 min"), nunca en milisegundos ni segundos crudos.
+- Si la playlist está vacía, la duración total se muestra como "0 min" (o equivalente), no en blanco ni con error.
+- La duración total se actualiza en pantalla apenas se agrega o quita una canción.
+
+P: Cuando la playlist dura menos de 1 hora, ¿mostramos igual el '0 h' adelante, o lo omitimos y mostramos solo los minutos?
+R: No, si dura menos de 1h se omite la parte de horas (ej. '23 min')
+
+P: ¿Querés incluir los segundos en el total, o redondear solo a minutos?
+R: No, solo horas y minutos (ej. '1 h 23 min'), sin segundos
+
+P: ¿Dónde querés que se vea la duración total dentro de la vista de detalle?
+R: Junto al título, en el header de detalle (al lado del nombre de la playlist)
+
+Chequeo contra los criterios de HU-07:
+
+✅ Se muestra la duración total sumando todas las canciones (.reduce() sobre duracionMs).
+✅ Formato legible: "1 h 23 min", o solo "23 min" si dura menos de 1 hora (tu primera decisión) — nunca milisegundos ni segundos crudos.
+✅ Playlist vacía → duracionTotalMs es 0, formatearDuracionTotal(0) devuelve "0 min" (porque horas === 0 cuando no hay canciones), no queda en blanco ni tira error.
+✅ Se actualiza automáticamente al agregar/quitar canciones, porque renderDetallePlaylist() ya se ejecuta en esos flujos desde HU-04 y HU-06 — no hace falta ningún cambio en app.js.
+------------------------------------------------------------------------

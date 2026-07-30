@@ -80,6 +80,10 @@ export function togglePopoverAgregar(cancionId) {
   estado = { ...estado, popoverAgregarAbiertoParaId: yaAbierto ? null : cancionId };
 }
 
+export function cerrarPopoverAgregar() {
+  estado = { ...estado, popoverAgregarAbiertoParaId: null };
+}
+
 export function existeCancionEnPlaylist(playlistId, cancionId) {
   const playlist = estado.playlists.find((p) => p.id === playlistId);
   if (!playlist) return false;

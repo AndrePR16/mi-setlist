@@ -176,6 +176,18 @@ function formatearFecha(fecha) {
   return `${dia}/${mes}/${anio} ${horas}:${minutos}`;
 }
 
+function formatearDuracionTotal(duracionMsTotal) {
+  const totalMinutos = Math.floor(duracionMsTotal / 1000 / 60);
+  const horas = Math.floor(totalMinutos / 60);
+  const minutos = totalMinutos % 60;
+
+  if (horas === 0) {
+    return `${minutos} min`;
+  }
+
+  return `${horas} h ${minutos} min`;
+}
+
 export function renderDetallePlaylist() {
   const contenedor = document.getElementById('detalle-playlist');
   const { playlists, playlistSeleccionadaId } = getEstado();
@@ -186,6 +198,10 @@ export function renderDetallePlaylist() {
     return;
   }
 
+  const duracionTotalMs = playlist.canciones.reduce(
+    (acumulado, item) => acumulado + item.cancion.duracionMs,
+    0
+  );
   const contenidoCanciones = playlist.canciones.length === 0
     ? `<p class="mensaje-estado mensaje-vacio">Todavía no agregaste canciones.</p>`
     : `<ul class="lista-canciones-playlist">
@@ -213,7 +229,10 @@ export function renderDetallePlaylist() {
 
   contenedor.innerHTML = `
     <div class="detalle-playlist-header">
-      <h2>${escaparHTML(playlist.nombre)}</h2>
+      <div class="detalle-playlist-titulo">
+        <h2>${escaparHTML(playlist.nombre)}</h2>
+        <span class="detalle-playlist-duracion">${formatearDuracionTotal(duracionTotalMs)}</span>
+      </div>
       <button
         type="button"
         class="boton-eliminar-playlist"

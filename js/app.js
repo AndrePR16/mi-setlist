@@ -11,6 +11,7 @@ import {
   crearPlaylist,
   setPlaylistSeleccionada,
   togglePopoverAgregar,
+  cerrarPopoverAgregar,
   agregarCancionAPlaylist,
   setToast,
   limpiarToast,
@@ -127,6 +128,7 @@ function programarOcultarToast() {
 function manejarClickResultados(evento) {
   const botonToggle = evento.target.closest('[data-action="toggle-agregar"]');
   if (botonToggle) {
+    evento.stopPropagation(); // ← nuevo: evita que este clic llegue a document y se auto-cierre
     togglePopoverAgregar(botonToggle.dataset.cancionId);
     renderResultados();
     return;
@@ -238,10 +240,31 @@ function manejarClickModal(evento) {
 }
 
 function manejarTeclaGlobal(evento) {
-  if (evento.key === 'Escape' && getEstado().modalConfirmacion) {
+  if (evento.key !== 'Escape') return;
+
+  const { modalConfirmacion, popoverAgregarAbiertoParaId } = getEstado();
+
+  if (modalConfirmacion) {
     cerrarModalConfirmacion();
     renderModalConfirmacion();
+    return;
   }
+
+  if (popoverAgregarAbiertoParaId) {
+    cerrarPopoverAgregar();
+    renderResultados();
+  }
+}
+
+function manejarClickDocumento(evento) {
+  const { popoverAgregarAbiertoParaId } = getEstado();
+  if (!popoverAgregarAbiertoParaId) return;
+
+  // Si el clic fue dentro de .tarjeta-acciones (el botón "Agregar" o el popover mismo), no cerramos
+  if (evento.target.closest('.tarjeta-acciones')) return;
+
+  cerrarPopoverAgregar();
+  renderResultados();
 }
 
 function init() {
@@ -271,6 +294,7 @@ function init() {
   modal.addEventListener('click', manejarClickModal);
 
   document.addEventListener('keydown', manejarTeclaGlobal);
+  document.addEventListener('click', manejarClickDocumento);
 
   renderListaPlaylists(); // pinta el estado vacío inicial ("Todavía no creaste ninguna playlist")
 }

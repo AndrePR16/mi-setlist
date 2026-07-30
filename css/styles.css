@@ -538,3 +538,19 @@ button:disabled {
 .modal-boton-confirmar:hover {
   background: #b83a3a;
 }
+
+.detalle-playlist-titulo {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+}
+
+.detalle-playlist-titulo h2 {
+  margin: 0;
+}
+
+.detalle-playlist-duracion {
+  font-size: 0.85rem;
+  color: #888;
+  font-weight: 500;
+}
