@@ -22,6 +22,8 @@ import {
     eliminarPlaylist,
     setCriterioOrdenPlaylist,
     cargarPlaylistsEnEstado,
+    toggleFavorita,
+    toggleSoloFavoritas,
 } from './state.js';
 import {
     renderResultados,
@@ -186,33 +188,48 @@ function manejarSubmitResultados(evento) {
 }
 
 function manejarClickDetallePlaylist(evento) {
-    const botonOrden = evento.target.closest('[data-action="cambiar-orden"]');
-    if (botonOrden) {
-        setCriterioOrdenPlaylist(botonOrden.dataset.criterio);
-        renderDetallePlaylist();
-        return;
-    }
-    const botonEliminarPlaylist = evento.target.closest('[data-action="eliminar-playlist"]');
-    if (botonEliminarPlaylist) {
-        abrirModalConfirmacion({
-            tipo: 'playlist',
-            playlistId: botonEliminarPlaylist.dataset.playlistId,
-            nombre: botonEliminarPlaylist.dataset.nombre,
-        });
-        renderModalConfirmacion();
-        return;
-    }
+  const botonFavorita = evento.target.closest('[data-action="toggle-favorita"]');
+  if (botonFavorita) {
+    toggleFavorita(botonFavorita.dataset.playlistId, botonFavorita.dataset.itemId);
+    renderDetallePlaylist();
+    return;
+  }
 
-    const botonQuitarCancion = evento.target.closest('[data-action="quitar-cancion"]');
-    if (botonQuitarCancion) {
-        abrirModalConfirmacion({
-            tipo: 'cancion',
-            playlistId: botonQuitarCancion.dataset.playlistId,
-            itemId: botonQuitarCancion.dataset.itemId,
-            nombre: botonQuitarCancion.dataset.titulo,
-        });
-        renderModalConfirmacion();
-    }
+  const botonFiltroFavoritas = evento.target.closest('[data-action="toggle-solo-favoritas"]');
+  if (botonFiltroFavoritas) {
+    toggleSoloFavoritas();
+    renderDetallePlaylist();
+    return;
+  }
+
+  const botonOrden = evento.target.closest('[data-action="cambiar-orden"]');
+  if (botonOrden) {
+    setCriterioOrdenPlaylist(botonOrden.dataset.criterio);
+    renderDetallePlaylist();
+    return;
+  }
+
+  const botonEliminarPlaylist = evento.target.closest('[data-action="eliminar-playlist"]');
+  if (botonEliminarPlaylist) {
+    abrirModalConfirmacion({
+      tipo: 'playlist',
+      playlistId: botonEliminarPlaylist.dataset.playlistId,
+      nombre: botonEliminarPlaylist.dataset.nombre,
+    });
+    renderModalConfirmacion();
+    return;
+  }
+
+  const botonQuitarCancion = evento.target.closest('[data-action="quitar-cancion"]');
+  if (botonQuitarCancion) {
+    abrirModalConfirmacion({
+      tipo: 'cancion',
+      playlistId: botonQuitarCancion.dataset.playlistId,
+      itemId: botonQuitarCancion.dataset.itemId,
+      nombre: botonQuitarCancion.dataset.titulo,
+    });
+    renderModalConfirmacion();
+  }
 }
 
 function ejecutarConfirmacionModal() {

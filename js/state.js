@@ -13,6 +13,7 @@ let estado = {
   toast: null, // { texto: string } | null
   modalConfirmacion: null, // { tipo: 'cancion' | 'playlist', playlistId, itemId?, nombre } | null
   criterioOrdenPlaylist: 'antiguas', // 'antiguas' | 'recientes' | 'titulo' | 'artista'
+  soloFavoritas: false,
 };
 
 export function getEstado() {
@@ -68,6 +69,7 @@ export function crearPlaylist(nombre) {
     mostrarFormularioPlaylist: false,
     errorFormularioPlaylist: null,
     criterioOrdenPlaylist: 'antiguas',
+    soloFavoritas: false, // ← nuevo
   };
 
   guardarPlaylists(estado.playlists); // ← nuevo
@@ -76,7 +78,7 @@ export function crearPlaylist(nombre) {
 }
 
 export function setPlaylistSeleccionada(id) {
-  estado = { ...estado, playlistSeleccionadaId: id, criterioOrdenPlaylist: 'antiguas' };
+  estado = { ...estado, playlistSeleccionadaId: id, criterioOrdenPlaylist: 'antiguas', soloFavoritas: false };
 }
 
 // --- HU-04: agregar canción a playlist ---
@@ -108,6 +110,7 @@ export function agregarCancionAPlaylist(playlistId, cancion) {
     id: crypto.randomUUID(),
     cancion,
     fechaAgregada: new Date(),
+    favorita: false, // ← nuevo
   };
 
   estado = {
@@ -178,4 +181,27 @@ export function setCriterioOrdenPlaylist(criterio) {
 // --- HU-10
 export function cargarPlaylistsEnEstado(playlists) {
   estado = { ...estado, playlists };
+}
+
+//--- HU-12
+export function toggleFavorita(playlistId, itemId) {
+  estado = {
+    ...estado,
+    playlists: estado.playlists.map((p) =>
+      p.id === playlistId
+        ? {
+            ...p,
+            canciones: p.canciones.map((item) =>
+              item.id === itemId ? { ...item, favorita: !item.favorita } : item
+            ),
+          }
+        : p
+    ),
+  };
+
+  guardarPlaylists(estado.playlists);
+}
+
+export function toggleSoloFavoritas() {
+  estado = { ...estado, soloFavoritas: !estado.soloFavoritas };
 }

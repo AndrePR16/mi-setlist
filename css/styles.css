@@ -736,3 +736,27 @@ button:disabled {
 body.modo-recuperacion > *:not(#app) {
   display: none;
 }
+
+.boton-favorita {
+  width: 24px;
+  height: 24px;
+  border: none;
+  background: transparent;
+  color: var(--color-texto-terciario);
+  font-size: 1.1rem;
+  cursor: pointer;
+  flex-shrink: 0;
+  line-height: 1;
+}
+
+.boton-favorita--activa {
+  color: #f2b705;
+}
+
+.boton-favorita:hover {
+  color: #f2b705;
+}
+
+.pill-favoritas {
+  margin-left: auto;
+}
