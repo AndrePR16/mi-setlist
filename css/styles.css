@@ -570,3 +570,30 @@ button:disabled {
   color: #333;
   font-weight: 600;
 }
+
+.control-orden {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-bottom: 0.75rem;
+}
+
+.pill-orden {
+  padding: 0.3rem 0.7rem;
+  border: 1px solid #ddd;
+  border-radius: 999px;
+  background: #fff;
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+
+.pill-orden:hover {
+  border-color: #6c5ce7;
+}
+
+.pill-orden--activa {
+  background: #6c5ce7;
+  color: #fff;
+  border-color: #6c5ce7;
+}

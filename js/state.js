@@ -10,6 +10,7 @@ let estado = {
   popoverAgregarAbiertoParaId: null,
   toast: null, // { texto: string } | null
   modalConfirmacion: null, // { tipo: 'cancion' | 'playlist', playlistId, itemId?, nombre } | null
+  criterioOrdenPlaylist: 'antiguas', // 'antiguas' | 'recientes' | 'titulo' | 'artista'
 };
 
 export function getEstado() {
@@ -64,13 +65,14 @@ export function crearPlaylist(nombre) {
     playlistSeleccionadaId: nuevaPlaylist.id,
     mostrarFormularioPlaylist: false,
     errorFormularioPlaylist: null,
+    criterioOrdenPlaylist: 'antiguas', // ← nuevo: la playlist recién creada arranca en orden por defecto
   };
 
   return nuevaPlaylist;
 }
 
 export function setPlaylistSeleccionada(id) {
-  estado = { ...estado, playlistSeleccionadaId: id };
+  estado = { ...estado, playlistSeleccionadaId: id, criterioOrdenPlaylist: 'antiguas' };
 }
 
 // --- HU-04: agregar canción a playlist ---
@@ -155,4 +157,10 @@ export function eliminarPlaylist(playlistId) {
     playlistSeleccionadaId: eraSeleccionada ? null : estado.playlistSeleccionadaId,
     modalConfirmacion: null,
   };
+}
+
+// --- HU-09: orden de canciones dentro de una playlist ---
+
+export function setCriterioOrdenPlaylist(criterio) {
+  estado = { ...estado, criterioOrdenPlaylist: criterio };
 }

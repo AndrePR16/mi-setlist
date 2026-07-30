@@ -19,6 +19,7 @@ import {
   cerrarModalConfirmacion,
   quitarCancionDePlaylist,
   eliminarPlaylist,
+  setCriterioOrdenPlaylist,
 } from './state.js';
 import {
   renderResultados,
@@ -182,6 +183,12 @@ function manejarSubmitResultados(evento) {
 }
 
 function manejarClickDetallePlaylist(evento) {
+    const botonOrden = evento.target.closest('[data-action="cambiar-orden"]');
+  if (botonOrden) {
+    setCriterioOrdenPlaylist(botonOrden.dataset.criterio);
+    renderDetallePlaylist();
+    return;
+  }
   const botonEliminarPlaylist = evento.target.closest('[data-action="eliminar-playlist"]');
   if (botonEliminarPlaylist) {
     abrirModalConfirmacion({

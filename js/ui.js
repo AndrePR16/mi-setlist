@@ -241,7 +241,7 @@ function renderEstadisticasPlaylist(playlist) {
 
 export function renderDetallePlaylist() {
   const contenedor = document.getElementById('detalle-playlist');
-  const { playlists, playlistSeleccionadaId } = getEstado();
+  const { playlists, playlistSeleccionadaId, criterioOrdenPlaylist } = getEstado();
   const playlist = playlists.find((p) => p.id === playlistSeleccionadaId);
 
   if (!playlist) {
@@ -254,10 +254,12 @@ export function renderDetallePlaylist() {
     0
   );
 
+  const cancionesOrdenadas = ordenarCanciones(playlist.canciones, criterioOrdenPlaylist);
+
   const contenidoCanciones = playlist.canciones.length === 0
     ? `<p class="mensaje-estado mensaje-vacio">Todavía no agregaste canciones.</p>`
     : `<ul class="lista-canciones-playlist">
-        ${playlist.canciones.map((item) => `
+        ${cancionesOrdenadas.map((item) => `
           <li class="item-cancion-playlist">
             <img class="item-cancion-caratula" src="${item.cancion.caratula}" alt="Carátula de ${escaparHTML(item.cancion.titulo)}" />
             <div class="item-cancion-info">
@@ -294,6 +296,7 @@ export function renderDetallePlaylist() {
       >Eliminar playlist</button>
     </div>
     ${renderEstadisticasPlaylist(playlist)}
+    ${playlist.canciones.length > 0 ? renderControlOrden() : ''}
     ${contenidoCanciones}
   `;
 }
@@ -330,6 +333,46 @@ export function renderModalConfirmacion() {
         <button type="button" class="modal-boton-cancelar" data-action="cancelar-modal">Cancelar</button>
         <button type="button" class="modal-boton-confirmar" data-action="confirmar-modal">Confirmar</button>
       </div>
+    </div>
+  `;
+}
+
+function ordenarCanciones(canciones, criterio) {
+  const copia = [...canciones];
+
+  switch (criterio) {
+    case 'recientes':
+      return copia.sort((a, b) => b.fechaAgregada - a.fechaAgregada);
+    case 'titulo':
+      return copia.sort((a, b) => a.cancion.titulo.localeCompare(b.cancion.titulo));
+    case 'artista':
+      return copia.sort((a, b) => a.cancion.artista.localeCompare(b.cancion.artista));
+    case 'antiguas':
+    default:
+      return copia.sort((a, b) => a.fechaAgregada - b.fechaAgregada);
+  }
+}
+
+function renderControlOrden() {
+  const { criterioOrdenPlaylist } = getEstado();
+
+  const opciones = [
+    { valor: 'recientes', etiqueta: 'Más recientes' },
+    { valor: 'antiguas', etiqueta: 'Más antiguas' },
+    { valor: 'titulo', etiqueta: 'Título A-Z' },
+    { valor: 'artista', etiqueta: 'Artista A-Z' },
+  ];
+
+  return `
+    <div class="control-orden">
+      ${opciones.map((opcion) => `
+        <button
+          type="button"
+          class="pill-orden ${opcion.valor === criterioOrdenPlaylist ? 'pill-orden--activa' : ''}"
+          data-action="cambiar-orden"
+          data-criterio="${opcion.valor}"
+        >${opcion.etiqueta}</button>
+      `).join('')}
     </div>
   `;
 }

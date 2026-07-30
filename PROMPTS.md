@@ -410,3 +410,68 @@ Chequeo contra los criterios de HU-07:
 ✅ Playlist vacía → duracionTotalMs es 0, formatearDuracionTotal(0) devuelve "0 min" (porque horas === 0 cuando no hay canciones), no queda en blanco ni tira error.
 ✅ Se actualiza automáticamente al agregar/quitar canciones, porque renderDetallePlaylist() ya se ejecuta en esos flujos desde HU-04 y HU-06 — no hace falta ningún cambio en app.js.
 ------------------------------------------------------------------------
+HU-08
+Sigamos con la HU-08: Ver estadísticas de la playlist (mismo tipo de trabajo que HU-07 —cálculo derivado del estado—, así que se agrupan).
+Como usuario, quiero ver estadísticas de mi playlist, para entender mejor mis gustos musicales.
+Criterios de aceptación:
+- Se muestra la cantidad total de canciones en la playlist.
+- Se muestra el género más frecuente entre las canciones de la playlist.
+- Se muestra el artista más repetido en la playlist.
+- Si hay empate entre géneros o artistas, se muestra al menos uno de forma consistente (sin error ni pantalla rota).
+- Si la playlist está vacía, las estadísticas muestran un estado neutro (ej. "Sin datos todavía") en vez de valores erróneos.
+
+P: Ante un empate (dos géneros o dos artistas con la misma cantidad), ¿qué regla de desempate consistente usamos?
+R: El primero que aparece en la playlist (orden de agregado)
+
+P: Recordás que en HU-01 pusimos 'Género desconocido' como placeholder cuando la API no devuelve género. ¿Cuenta ese placeholder como un género más para el cálculo de 'más frecuente'?
+R: No, se excluye del cálculo de género más frecuente
+
+P: ¿Dónde querés ver las estadísticas dentro del detalle de la playlist?
+R: En una sección aparte, con sus propias etiquetas (ej. 'Canciones: 5 | Género: Pop | Artista: X')
+
+Con esas respuestas, así construimos HU-08 — otra historia liviana, solo js/ui.js, mismo patrón que HU-07.
+
+Desempate por orden de agregado: como playlist.canciones ya está en ese orden (HU-05), recorrerlo con un for normal (no .sort(), que reordenaría) y quedarme con el primer género/artista que alcance el máximo conteo, resuelve el empate naturalmente sin código extra de desempate.
+Excluir "Género desconocido": lo filtro antes de contar, así nunca puede "ganar" como más frecuente.
+Sección aparte: agrego un bloque nuevo .estadisticas-playlist entre el header y la lista de canciones.
+
+Chequeo contra los criterios de HU-08:
+
+✅ Cantidad total de canciones (playlist.canciones.length).
+✅ Género más frecuente, excluyendo el placeholder de género desconocido.
+✅ Artista más repetido.
+✅ Empate → gana el primero en orden de agregado, de forma determinística (no cambia entre renders).
+✅ Playlist vacía → bloque "Sin datos todavía." en vez de valores erróneos o NaN/undefined.
+-------------------------------------------------------------
+HU-09
+Sigamos con la HU-09: Ordenar las canciones de una playlist (lógica de presentación sobre la lista ya renderizada, no toca el modelo de datos).
+Como usuario, quiero ordenar las canciones de una playlist, para encontrarlas más fácil según lo que necesite.
+Criterios de aceptación:
+- Hay una opción visible para ordenar por "más recientes" y otra por "más antiguas" (según fecha de agregado).
+- Hay una opción visible para ordenar alfabéticamente (por nombre de canción o artista).
+- Al cambiar el criterio de orden, la lista en pantalla se reordena inmediatamente sin recargar la página.
+- El orden elegido se refleja visualmente sin alterar los datos originales de la playlist (mismas canciones, solo cambia el orden mostrado).
+
+P: ¿Cómo querés que se vea el control para elegir el orden?
+R: Botones/pills, uno por cada criterio (más visual, como los filtros que ya usamos)
+
+P: El criterio dice 'alfabético (por nombre de canción o artista)' — ¿cuál de las dos preferís, o querés ambas como opciones distintas?
+R: Dos opciones separadas: una alfabética por título y otra por artista
+
+P: Si cambiás de playlist y volvés a la anterior, ¿querés que recuerde el orden que habías elegido, o que vuelva siempre al orden por defecto?
+R: No, siempre vuelve al orden por defecto (agregado) al cambiar de playlist
+
+Con esas respuestas, así construimos HU-09:
+
+Pills de orden: reusamos el mismo lenguaje visual que ya tenés en .item-playlist (pill con estado activo).
+Reset al cambiar de playlist: agrego el criterio de orden al estado central, y lo reseteo a su valor por defecto ('antiguas' = el orden natural de agregado, que ya es lo que se ve hoy) en los dos lugares donde cambia la playlist seleccionada: setPlaylistSeleccionada y crearPlaylist.
+No altera los datos: el ordenamiento se hace sobre una copia del array ([...canciones]) justo antes de renderizar, dentro de js/ui.js — playlist.canciones en el estado nunca se toca. Esto es puramente de presentación, como pedía la historia.
+
+Chequeo contra los criterios de HU-09:
+
+✅ Opción visible para "más recientes" y "más antiguas" (pills separadas).
+✅ Opción alfabética, dividida en título y artista como pediste.
+✅ Cambiar el criterio reordena de inmediato — setCriterioOrdenPlaylist + renderDetallePlaylist() en el mismo clic, sin recargar.
+✅ No altera los datos originales: ordenarCanciones siempre trabaja sobre [...canciones], playlist.canciones en el estado nunca se toca por .sort().
+✅ Bonus de tu tercera decisión: el criterio vuelve a 'antiguas' cada vez que se selecciona o crea una playlist.
+----------------------------------------------------------------------------------
