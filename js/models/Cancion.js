@@ -7,7 +7,7 @@ const CARATULA_PLACEHOLDER = 'data:image/svg+xml;utf8,' + encodeURIComponent(`
 
 export class Cancion {
   constructor({ id, titulo, artista, caratula, duracionMs, genero }) {
-    this.id = id;
+    this.id = String(id);
     this.titulo = titulo || 'Título desconocido';
     this.artista = artista || 'Artista desconocido';
     this.caratula = caratula || CARATULA_PLACEHOLDER;

@@ -298,3 +298,29 @@ Chequeo contra los criterios de HU-03:
 ✅ Varias playlists con nombres distintos, todas visibles en la lista.
 ✅ Playlist recién creada se selecciona sola y muestra "Todavía no agregaste canciones" en #detalle-playlist.
 -------------------------------------------------------------------------
+HU-04
+Sigamos con la HU-04: Agregar canciones desde la búsqueda a una playlist (es el punto de unión: necesita que HU-01 y HU-03 ya funcionen).
+**Como** usuario, **quiero** agregar canciones encontradas en la búsqueda a una playlist existente, **para** ir armando mi lista.
+**Criterios de aceptación:**
+- Desde cada resultado de búsqueda hay una acción visible para agregarlo a una playlist (botón o selector).
+- Si hay más de una playlist creada, el usuario puede elegir a cuál agregar la canción.
+- Tras agregar, se ve una confirmación visual breve (ej. mensaje "Agregada a Road trip" o cambio de ícono).
+- Si se intenta agregar la misma canción dos veces a la misma playlist, la app lo permite o avisa según la regla elegida, pero nunca rompe la pantalla ni duplica sin control visible.
+
+P: Si el usuario intenta agregar la misma canción dos veces a la misma playlist, ¿qué regla aplicamos?
+R: Se avisa y NO se agrega de nuevo (evita duplicados exactos)
+
+P: ¿Cómo elige el usuario a qué playlist agregar, cuando hay varias creadas?
+R: Botón '+' en la tarjeta que abre un pequeño menu/popover con la lista de playlists para elegir
+
+P: ¿Qué pasa si todavía no hay ninguna playlist creada y el usuario quiere agregar una canción desde los resultados?
+R: Permitir hacer clic igual, y ahí mismo ofrecer crear una playlist nueva al vuelo
+
+Chequeo contra los criterios de HU-04:
+
+✅ Acción visible para agregar en cada resultado (botón "+").
+✅ Con varias playlists, el popover deja elegir a cuál agregar.
+✅ Confirmación visual breve tras agregar (toast "Agregada a X").
+✅ Duplicado exacto → se avisa (toast) y no se agrega de nuevo; nunca duplica sin control ni rompe pantalla.
+✅ Bonus de tu tercera decisión: sin playlists, se puede crear una al vuelo y queda agregada en el mismo paso.
+-------------------------------------------------------------------

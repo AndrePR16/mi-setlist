@@ -7,6 +7,8 @@ let estado = {
   playlistSeleccionadaId: null,
   mostrarFormularioPlaylist: false,
   errorFormularioPlaylist: null,
+  popoverAgregarAbiertoParaId: null,
+  toast: null, // { texto: string } | null
 };
 
 export function getEstado() {
@@ -68,4 +70,51 @@ export function crearPlaylist(nombre) {
 
 export function setPlaylistSeleccionada(id) {
   estado = { ...estado, playlistSeleccionadaId: id };
+}
+
+// --- HU-04: agregar canción a playlist ---
+
+export function togglePopoverAgregar(cancionId) {
+  const yaAbierto = estado.popoverAgregarAbiertoParaId === cancionId;
+  estado = { ...estado, popoverAgregarAbiertoParaId: yaAbierto ? null : cancionId };
+}
+
+export function existeCancionEnPlaylist(playlistId, cancionId) {
+  const playlist = estado.playlists.find((p) => p.id === playlistId);
+  if (!playlist) return false;
+  return playlist.canciones.some((item) => item.cancion.id === cancionId);
+}
+
+export function agregarCancionAPlaylist(playlistId, cancion) {
+  if (existeCancionEnPlaylist(playlistId, cancion.id)) {
+    return { ok: false, motivo: 'duplicada' };
+  }
+
+  const playlist = estado.playlists.find((p) => p.id === playlistId);
+  if (!playlist) return { ok: false, motivo: 'no-existe' };
+
+  const nuevoItem = {
+    id: crypto.randomUUID(),
+    cancion,
+    fechaAgregada: new Date(),
+  };
+
+  estado = {
+    ...estado,
+    playlists: estado.playlists.map((p) =>
+      p.id === playlistId ? { ...p, canciones: [...p.canciones, nuevoItem] } : p
+    ),
+    popoverAgregarAbiertoParaId: null,
+    toast: { texto: `Agregada a ${playlist.nombre}` },
+  };
+
+  return { ok: true };
+}
+
+export function setToast(texto) {
+  estado = { ...estado, toast: { texto } };
+}
+
+export function limpiarToast() {
+  estado = { ...estado, toast: null };
 }

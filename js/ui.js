@@ -6,6 +6,35 @@ function escaparHTML(texto) {
   return div.innerHTML;
 }
 
+function renderPopoverAgregar(cancion) {
+  const { playlists, popoverAgregarAbiertoParaId } = getEstado();
+  if (popoverAgregarAbiertoParaId !== cancion.id) return '';
+
+  const listaPlaylists = playlists.length === 0
+    ? `<p class="popover-vacio">Todavía no tenés playlists.</p>`
+    : playlists.map((playlist) => `
+        <button
+          type="button"
+          class="popover-item-playlist"
+          data-action="agregar-a-playlist"
+          data-playlist-id="${playlist.id}"
+          data-cancion-id="${cancion.id}"
+        >
+          ${escaparHTML(playlist.nombre)}
+        </button>
+      `).join('');
+
+  return `
+    <div class="popover-agregar">
+      ${listaPlaylists}
+      <form class="popover-form-nueva-playlist" data-action="crear-y-agregar" data-cancion-id="${cancion.id}">
+        <input type="text" name="nombreNuevaPlaylist" placeholder="+ Nueva playlist" autocomplete="off" />
+        <button type="submit">Crear y agregar</button>
+      </form>
+    </div>
+  `;
+}
+
 export function renderResultados() {
   const contenedor = document.getElementById('resultados');
   const { resultadosBusqueda } = getEstado();
@@ -17,18 +46,32 @@ export function renderResultados() {
 
   contenedor.innerHTML = resultadosBusqueda.map((cancion) => `
     <article class="tarjeta-cancion" data-id="${cancion.id}">
-      <img
-        class="tarjeta-caratula"
-        src="${cancion.caratula}"
-        alt="Carátula de ${escaparHTML(cancion.titulo)}"
-      />
+      <img class="tarjeta-caratula" src="${cancion.caratula}" alt="Carátula de ${escaparHTML(cancion.titulo)}" />
       <div class="tarjeta-info">
         <p class="tarjeta-titulo">${escaparHTML(cancion.titulo)}</p>
         <p class="tarjeta-artista">${escaparHTML(cancion.artista)}</p>
         <p class="tarjeta-duracion">${cancion.duracionLegible()}</p>
       </div>
+      <div class="tarjeta-acciones">
+        <button type="button" class="boton-agregar" data-action="toggle-agregar" data-cancion-id="${cancion.id}" aria-label="Agregar a playlist">+</button>
+        ${renderPopoverAgregar(cancion)}
+      </div>
     </article>
   `).join('');
+}
+
+export function renderToast() {
+  const contenedor = document.getElementById('toast');
+  const { toast } = getEstado();
+
+  if (!toast) {
+    contenedor.textContent = '';
+    contenedor.classList.remove('toast--visible');
+    return;
+  }
+
+  contenedor.textContent = toast.texto;
+  contenedor.classList.add('toast--visible');
 }
 
 export function renderEstadoBusqueda() {
