@@ -496,6 +496,7 @@ Chequeo contra los criterios de HU-10:
 ✅ Se muestra pantalla con botón "Empezar de cero".
 ✅ Al presionarlo, se borra localStorage y se recarga la página — queda como recién instalada, lista para crear playlists de nuevo.
 ----------------------------------------------------------------------------------
+HU-11
 Ahora viene la implementación de 2 HU nuevas, una te dije que sería el modo oscuro y creo que la otra sería el de Favoritos, que se represente por el ícono de una estrella en la canción, vista o filtros.
 
 hagamos un ajuste, en el modo oscuro, se puede habilitar en caso la preferencia del sistema sea claro, en caso la preferencia del sistema este oscuro, la aplicación se muestra oscura. Si no, de igual forma se puede habilitar el modo oscuro. me dejé entender?
@@ -520,3 +521,21 @@ Lo cumple manejarCambioTema(): guarda 'oscuro' o 'claro' en localStorage, y obte
 ✅ "El cambio de tema es inmediato, sin recargar la página."
 aplicarTema() solo agrega/saca la clase tema-oscuro del <body> con classList.toggle(...) — el CSS reacciona al instante porque las variables cambian de valor apenas cambia esa clase, sin ningún location.reload().
 ---------------------------------------------------------------------------
+HU-12
+sigamos con la HU-12: Marcar canciones como favoritas
+Como usuario, quiero marcar canciones como favoritas con una estrella, para identificar rápido mis canciones preferidas dentro de una playlist.
+Criterios de aceptación (propuesta, a confirmar):
+Cada canción dentro de una playlist tiene un ícono de estrella clickeable para marcarla/desmarcarla como favorita.
+El estado de favorito se ve claramente distinto (estrella llena vs. vacía).
+Hay una forma de filtrar o ver solo las canciones favoritas dentro de una playlist.
+El estado de favorito persiste al recargar la página (mismo mecanismo de localStorage que ya tenemos).
+
+P: ¿Dónde va la estrella en cada fila de canción dentro de la playlist?
+R: A la izquierda, antes de la carátula
+
+Chequeo contra los criterios de HU-12:
+
+✅ Estrella clickeable en cada canción dentro de una playlist (a la izquierda, como pediste).
+✅ Estado visualmente distinto: ★ dorado (activa) vs ☆ gris (inactiva).
+✅ Filtro "Solo favoritas" tipo pill, junto a las de orden.
+✅ Persiste al recargar: toggleFavorita llama a guardarPlaylists, y favorita viaja intacta a través del ...item en rehidratarPlaylists de HU-10 — no hizo falta tocar storage.js.

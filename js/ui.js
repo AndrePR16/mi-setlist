@@ -265,33 +265,37 @@ export function renderDetallePlaylist() {
     ? `<p class="mensaje-estado mensaje-vacio">No tenés canciones favoritas todavía.</p>`
     : `<ul class="lista-canciones-playlist">
         ${cancionesAMostrar.map((item) => `
-          <li class="item-cancion-playlist">
-            <button
-              type="button"
-              class="boton-favorita ${item.favorita ? 'boton-favorita--activa' : ''}"
-              data-action="toggle-favorita"
-              data-playlist-id="${playlist.id}"
-              data-item-id="${item.id}"
-              aria-label="${item.favorita ? 'Quitar de favoritas' : 'Marcar como favorita'}"
-            >${item.favorita ? '★' : '☆'}</button>
-            <img class="item-cancion-caratula" src="${item.cancion.caratula}" alt="Carátula de ${escaparHTML(item.cancion.titulo)}" />
-            <div class="item-cancion-info">
-              <p class="item-cancion-titulo">${escaparHTML(item.cancion.titulo)}</p>
-              <p class="item-cancion-artista">${escaparHTML(item.cancion.artista)}</p>
-            </div>
-            <span class="item-cancion-duracion">${item.cancion.duracionLegible()}</span>
-            <span class="item-cancion-fecha">Agregada: ${formatearFecha(item.fechaAgregada)}</span>
-            <button
-              type="button"
-              class="boton-quitar-cancion"
-              data-action="quitar-cancion"
-              data-playlist-id="${playlist.id}"
-              data-item-id="${item.id}"
-              data-titulo="${escaparHTML(item.cancion.titulo)}"
-              aria-label="Quitar de la playlist"
-            >×</button>
-          </li>
-        `).join('')}
+  <li class="item-cancion-playlist">
+    <button
+      type="button"
+      class="boton-favorita ${item.favorita ? 'boton-favorita--activa' : ''}"
+      data-action="toggle-favorita"
+      data-playlist-id="${playlist.id}"
+      data-item-id="${item.id}"
+      aria-label="${item.favorita ? 'Quitar de favoritas' : 'Marcar como favorita'}"
+    >${item.favorita ? '★' : '☆'}</button>
+    <img class="item-cancion-caratula" src="${item.cancion.caratula}" alt="Carátula de ${escaparHTML(item.cancion.titulo)}" />
+    <div class="item-cancion-info">
+      <div class="item-cancion-fila item-cancion-fila-titulo">
+        <p class="item-cancion-titulo">${escaparHTML(item.cancion.titulo)}</p>
+        <span class="item-cancion-duracion">${item.cancion.duracionLegible()}</span>
+      </div>
+      <div class="item-cancion-fila item-cancion-fila-artista">
+        <p class="item-cancion-artista">${escaparHTML(item.cancion.artista)}</p>
+        <span class="item-cancion-fecha">Agregada: ${formatearFecha(item.fechaAgregada)}</span>
+      </div>
+    </div>
+    <button
+      type="button"
+      class="boton-quitar-cancion"
+      data-action="quitar-cancion"
+      data-playlist-id="${playlist.id}"
+      data-item-id="${item.id}"
+      data-titulo="${escaparHTML(item.cancion.titulo)}"
+      aria-label="Quitar de la playlist"
+    >×</button>
+  </li>
+`).join('')}
       </ul>`;
 
   contenedor.innerHTML = `

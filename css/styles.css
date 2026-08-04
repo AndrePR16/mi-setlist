@@ -16,6 +16,8 @@
   --color-peligro-fondo: #fdecea;
   --sombra-modal: rgba(0, 0, 0, 0.2);
   --sombra-popover: rgba(0, 0, 0, 0.12);
+  --color-verde: #1db954;
+  --color-verde-hover: #17a54a;
 }
 
 /* === Overrides cuando el body tiene la clase tema-oscuro === */
@@ -36,6 +38,7 @@ body.tema-oscuro {
   --color-peligro-fondo: #3a2323;
   --sombra-modal: rgba(0, 0, 0, 0.6);
   --sombra-popover: rgba(0, 0, 0, 0.5);
+  
 }
 
 body {
@@ -407,9 +410,9 @@ button:disabled {
 .boton-agregar {
   padding: 0.35rem 0.9rem;
   border-radius: 999px;
-  border: 1px solid var(--color-borde);
-  background: var(--color-superficie);
-  color: var(--color-texto);
+  border: none;
+  background: var(--color-verde);
+  color: #fff;
   font-size: 0.8rem;
   font-weight: 600;
   cursor: pointer;
@@ -417,7 +420,7 @@ button:disabled {
 }
 
 .boton-agregar:hover {
-  background: var(--color-fondo-secundario);
+  background: var(--color-verde-hover);
 }
 
 .popover-agregar {
@@ -438,16 +441,20 @@ button:disabled {
 
 .popover-item-playlist {
   text-align: left;
-  padding: 0.4rem 0.5rem;
-  border: none;
-  background: transparent;
-  color: var(--color-texto);
+  padding: 0.5rem 0.8rem;
+  border: 1px solid var(--color-acento-suave);
+  background: var(--color-acento-suave);
+  color: var(--color-acento);
+  font-weight: 600;
+  font-size: 0.85rem;
   cursor: pointer;
-  border-radius: 4px;
+  border-radius: 999px;
+  transition: background 0.15s, color 0.15s;
 }
 
 .popover-item-playlist:hover {
-  background: var(--color-fondo-secundario);
+  background: var(--color-acento);
+  color: #fff;
 }
 
 .popover-vacio {
@@ -593,6 +600,7 @@ button:disabled {
 .item-cancion-info {
   display: flex;
   flex-direction: column;
+  gap: 0.15rem;
   min-width: 0;
   flex: 1;
 }
@@ -603,24 +611,52 @@ button:disabled {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  min-width: 0;
 }
 
 .item-cancion-artista {
   font-size: 0.8rem;
   color: var(--color-texto-secundario);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
 }
 
 .item-cancion-duracion {
   font-size: 0.85rem;
   color: var(--color-texto);
   flex-shrink: 0;
+  white-space: nowrap;
 }
 
 .item-cancion-fecha {
   font-size: 0.75rem;
   color: var(--color-texto-terciario);
   flex-shrink: 0;
-  white-space: nowrap;
+  text-align: right;
+}
+
+/* Responsive: en pantallas angostas, la fecha se parte en 2 líneas en vez de forzar el ancho */
+@media (max-width: 480px) {
+  .item-cancion-fila-artista {
+    align-items: flex-start;
+  }
+
+  .item-cancion-fecha {
+    max-width: 45%;
+    white-space: normal;
+    line-height: 1.2;
+  }
+
+  .detalle-playlist-header {
+    flex-wrap: wrap;
+    row-gap: 0.5rem;
+  }
+
+  .boton-eliminar-playlist {
+    margin-left: auto;
+  }
 }
 
 .boton-quitar-cancion {
