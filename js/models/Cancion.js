@@ -6,13 +6,14 @@ const CARATULA_PLACEHOLDER = 'data:image/svg+xml;utf8,' + encodeURIComponent(`
 `);
 
 export class Cancion {
-  constructor({ id, titulo, artista, caratula, duracionMs, genero }) {
+  constructor({ id, titulo, artista, caratula, duracionMs, genero, previewUrl }) {
     this.id = String(id);
     this.titulo = titulo || 'Título desconocido';
     this.artista = artista || 'Artista desconocido';
     this.caratula = caratula || CARATULA_PLACEHOLDER;
     this.duracionMs = duracionMs || 0;
     this.genero = genero || 'Género desconocido';
+    this.previewUrl = previewUrl || null; // ← nuevo
   }
 
   static fromApiResult(resultado) {
@@ -23,6 +24,7 @@ export class Cancion {
       caratula: resultado.artworkUrl100,
       duracionMs: resultado.trackTimeMillis,
       genero: resultado.primaryGenreName,
+      previewUrl: resultado.previewUrl, // ← nuevo
     });
   }
 

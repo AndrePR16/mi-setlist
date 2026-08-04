@@ -145,12 +145,33 @@
 
 ---
 
+### HU-13: Ver las playlists en un panel lateral
+**Como** usuario, **quiero** ver mis playlists en un panel al costado de la pantalla, **para** acceder a ellas sin tener que desplazarme hasta el final de la página.
+ 
+**Criterios de aceptación:**s
+- En pantallas anchas, el panel de playlists se muestra fijo al lado derecho de los resultados de búsqueda, visible sin necesidad de scroll adicional.
+- En pantallas angostas (mobile), el panel de playlists queda oculto por defecto y aparece un botón visible para mostrarlo u ocultarlo.
+- Al mostrar el panel en mobile, se puede seguir usando normalmente (crear playlist, seleccionar, ver detalle) sin que tape permanentemente los resultados de búsqueda.
+- El cambio entre el layout de escritorio y el de mobile ocurre automáticamente según el ancho de pantalla, sin acción del usuario.
+---
+ 
+### HU-14: Reproducir un preview de las canciones
+**Como** usuario, **quiero** escuchar un preview de las canciones desde la búsqueda y desde mis playlists, **para** decidir si me gustan antes de agregarlas o simplemente disfrutarlas.
+ 
+**Criterios de aceptación:**
+- Cada canción, tanto en los resultados de búsqueda como dentro de una playlist, tiene un botón para reproducir su preview de audio.
+- Hay un reproductor visible en la parte inferior central de la pantalla que muestra qué canción está sonando (título y artista) y permite pausar/reanudar.
+- Dentro de una playlist, hay una acción para reproducir todas sus canciones en secuencia, respetando el criterio de orden actualmente seleccionado (recientes, antiguas, alfabético).
+- Al terminar la reproducción de una canción durante "Reproducir todo", comienza automáticamente la siguiente de la cola, sin acción del usuario.
+- Si una canción no tiene preview disponible, la reproducción no se rompe ni queda trabada: se informa y continúa (o se omite) de forma que la experiencia siga siendo utilizable.
+---
+ 
 ## Resumen de cobertura
-
+ 
 | Sprint | Historias | Funcionalidades del MVP cubiertas |
 |--------|-----------|-------------------------------------|
 | Sprint 1 | HU-01 a HU-05 | Búsqueda, estados de búsqueda, crear playlist, agregar canciones, ver contenido |
 | Sprint 2 | HU-06 a HU-10 | Quitar/eliminar con confirmación, duración total, estadísticas, orden, persistencia y recuperación |
-| Extra | HU-11 y HU-12 | Modo oscuro, canciones favoritas — fuera del alcance original del MVP |
-
-**Nota:** las historias HU-01 a HU-10 cubren la totalidad del MVP definido. HU-11 y HU-12 son funcionalidades adicionales, incorporadas después de cerrar ambos sprints.
+| Extra | HU-11 a HU-14 | Modo oscuro, canciones favoritas, panel lateral de playlists, reproductor de preview — fuera del alcance original del MVP |
+ 
+**Nota:** las historias HU-01 a HU-10 cubren la totalidad del MVP definido. HU-11 a HU-14 son funcionalidades adicionales, incorporadas después de cerrar ambos sprints.

@@ -10,33 +10,47 @@
 
 <body>
     <h1>🎵 Mi Setlist</h1>
+
     <div class="control-tema">
         <label class="switch-tema">
             <input type="checkbox" id="toggle-tema" />
             <span class="switch-tema-slider"></span>
         </label>
     </div>
-    <div id="app"></div>
-    <form id="form-busqueda" class="form-busqueda">
-        <input type="text" id="input-busqueda" name="busqueda" placeholder="Buscar por artista o título..."
-            autocomplete="off" />
-        <button type="submit" id="boton-buscar">Buscar</button>
-    </form>
-    <div id="estado-busqueda" class="zona-estado" aria-live="polite"></div>
-    <section id="resultados" class="lista-resultados" aria-live="polite"></section>
 
-    <section class="seccion-playlists">
-        <div class="cabecera-playlists">
-            <h2>Mis playlists</h2>
-            <button type="button" id="boton-nueva-playlist">Nueva playlist</button>
+    <button type="button" id="boton-toggle-playlists" class="boton-toggle-playlists">🎵 Ver playlists</button>
+
+    <div class="layout-principal">
+        <main class="columna-principal">
+            <form id="form-busqueda" class="form-busqueda">
+                <input type="text" id="input-busqueda" name="busqueda" placeholder="Buscar por artista o título..." autocomplete="off" />
+                <button type="submit" id="boton-buscar">Buscar</button>
+            </form>
+            <div id="estado-busqueda" class="zona-estado" aria-live="polite"></div>
+            <section id="resultados" class="lista-resultados" aria-live="polite"></section>
+        </main>
+
+        <aside id="panel-playlists" class="panel-playlists">
+            <button type="button" id="boton-cerrar-playlists" class="boton-cerrar-playlists">✕ Cerrar</button>
+            <div class="cabecera-playlists">
+                <h2>Mis playlists</h2>
+                <button type="button" id="boton-nueva-playlist">Nueva playlist</button>
+            </div>
+            <div id="formulario-playlist-contenedor"></div>
+            <div id="lista-playlists" class="lista-playlists"></div>
+            <div id="detalle-playlist" class="detalle-playlist"></div>
+        </aside>
+    </div>
+
+    <div id="reproductor" class="reproductor">
+        <div class="reproductor-info">
+            <span id="reproductor-titulo"></span>
+            <span id="reproductor-artista"></span>
         </div>
+        <button type="button" id="boton-play-pausa" class="boton-play-pausa">▶</button>
+    </div>
+    <audio id="audio-elemento"></audio>
 
-        <div id="formulario-playlist-contenedor"></div>
-
-        <div id="lista-playlists" class="lista-playlists"></div>
-
-        <div id="detalle-playlist" class="detalle-playlist"></div>
-    </section>
     <div id="toast" class="toast" aria-live="polite"></div>
     <div id="modal-confirmacion" class="modal-overlay"></div>
     <script type="module" src="js/app.js"></script>

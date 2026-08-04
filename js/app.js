@@ -24,6 +24,10 @@ import {
     cargarPlaylistsEnEstado,
     toggleFavorita,
     toggleSoloFavoritas,
+    reproducirCola,
+    pausarReproductor,
+    reanudarReproductor,
+    avanzarReproductor,
 } from './state.js';
 import {
     renderResultados,
@@ -34,7 +38,63 @@ import {
     renderToast,
     renderModalConfirmacion,
     renderPantallaRecuperacion,
+    renderReproductor,
+    ordenarCanciones,   // ← ahora sí, en el import correcto
 } from './ui.js';
+let ultimaCancionId = null;
+
+function sincronizarAudioElemento() {
+    const { reproductor } = getEstado();
+    const audio = document.getElementById('audio-elemento');
+    const cancionActual = reproductor.cola[reproductor.indice] || null;
+
+    if (!cancionActual) {
+        audio.pause();
+        audio.removeAttribute('src');
+        ultimaCancionId = null;
+        renderReproductor();
+        return;
+    }
+
+    if (!cancionActual.previewUrl) {
+        setToast('Esta canción no tiene preview disponible.');
+        renderToast();
+        programarOcultarToast();
+        avanzarReproductor(); // salta a la siguiente en vez de trabarse
+        sincronizarAudioElemento();
+        return;
+    }
+
+    if (cancionActual.id !== ultimaCancionId) {
+        audio.src = cancionActual.previewUrl;
+        ultimaCancionId = cancionActual.id;
+    }
+
+    if (reproductor.estaSonando) {
+        audio.play().catch((error) => console.error('No se pudo reproducir:', error));
+    } else {
+        audio.pause();
+    }
+
+    renderReproductor();
+}
+
+function manejarFinCancion() {
+    avanzarReproductor();
+    sincronizarAudioElemento();
+}
+
+function manejarClickPlayPausa() {
+    const { reproductor } = getEstado();
+    if (reproductor.cola.length === 0) return;
+
+    if (reproductor.estaSonando) {
+        pausarReproductor();
+    } else {
+        reanudarReproductor();
+    }
+    sincronizarAudioElemento();
+}
 
 let idTimeoutToast = null;
 
@@ -132,6 +192,15 @@ function programarOcultarToast() {
 }
 
 function manejarClickResultados(evento) {
+    const botonPlay = evento.target.closest('[data-action="reproducir-cancion"]');
+    if (botonPlay) {
+        const cancion = getEstado().resultadosBusqueda.find((c) => c.id === botonPlay.dataset.cancionId);
+        if (!cancion) return;
+        reproducirCola([cancion], 0);
+        sincronizarAudioElemento();
+        return;
+    }
+
     const botonToggle = evento.target.closest('[data-action="toggle-agregar"]');
     if (botonToggle) {
         evento.stopPropagation(); // ← nuevo: evita que este clic llegue a document y se auto-cierre
@@ -188,48 +257,74 @@ function manejarSubmitResultados(evento) {
 }
 
 function manejarClickDetallePlaylist(evento) {
-  const botonFavorita = evento.target.closest('[data-action="toggle-favorita"]');
-  if (botonFavorita) {
-    toggleFavorita(botonFavorita.dataset.playlistId, botonFavorita.dataset.itemId);
-    renderDetallePlaylist();
+    const botonReproducirTodo = evento.target.closest('[data-action="reproducir-playlist"]');
+  if (botonReproducirTodo) {
+    const { playlists, criterioOrdenPlaylist } = getEstado();
+    const playlist = playlists.find((p) => p.id === botonReproducirTodo.dataset.playlistId);
+    if (!playlist) return;
+
+    const canciones = ordenarCanciones(playlist.canciones, criterioOrdenPlaylist)
+      .map((item) => item.cancion);
+
+    reproducirCola(canciones, 0);
+    sincronizarAudioElemento();
     return;
   }
 
-  const botonFiltroFavoritas = evento.target.closest('[data-action="toggle-solo-favoritas"]');
-  if (botonFiltroFavoritas) {
-    toggleSoloFavoritas();
-    renderDetallePlaylist();
+  const botonPlayItem = evento.target.closest('[data-action="reproducir-item"]');
+  if (botonPlayItem) {
+    const { playlists } = getEstado();
+    const playlist = playlists.find((p) => p.id === botonPlayItem.dataset.playlistId);
+    const item = playlist?.canciones.find((i) => i.id === botonPlayItem.dataset.itemId);
+    if (!item) return;
+
+    reproducirCola([item.cancion], 0);
+    sincronizarAudioElemento();
     return;
   }
 
-  const botonOrden = evento.target.closest('[data-action="cambiar-orden"]');
-  if (botonOrden) {
-    setCriterioOrdenPlaylist(botonOrden.dataset.criterio);
-    renderDetallePlaylist();
-    return;
-  }
+    const botonFavorita = evento.target.closest('[data-action="toggle-favorita"]');
+    if (botonFavorita) {
+        toggleFavorita(botonFavorita.dataset.playlistId, botonFavorita.dataset.itemId);
+        renderDetallePlaylist();
+        return;
+    }
 
-  const botonEliminarPlaylist = evento.target.closest('[data-action="eliminar-playlist"]');
-  if (botonEliminarPlaylist) {
-    abrirModalConfirmacion({
-      tipo: 'playlist',
-      playlistId: botonEliminarPlaylist.dataset.playlistId,
-      nombre: botonEliminarPlaylist.dataset.nombre,
-    });
-    renderModalConfirmacion();
-    return;
-  }
+    const botonFiltroFavoritas = evento.target.closest('[data-action="toggle-solo-favoritas"]');
+    if (botonFiltroFavoritas) {
+        toggleSoloFavoritas();
+        renderDetallePlaylist();
+        return;
+    }
 
-  const botonQuitarCancion = evento.target.closest('[data-action="quitar-cancion"]');
-  if (botonQuitarCancion) {
-    abrirModalConfirmacion({
-      tipo: 'cancion',
-      playlistId: botonQuitarCancion.dataset.playlistId,
-      itemId: botonQuitarCancion.dataset.itemId,
-      nombre: botonQuitarCancion.dataset.titulo,
-    });
-    renderModalConfirmacion();
-  }
+    const botonOrden = evento.target.closest('[data-action="cambiar-orden"]');
+    if (botonOrden) {
+        setCriterioOrdenPlaylist(botonOrden.dataset.criterio);
+        renderDetallePlaylist();
+        return;
+    }
+
+    const botonEliminarPlaylist = evento.target.closest('[data-action="eliminar-playlist"]');
+    if (botonEliminarPlaylist) {
+        abrirModalConfirmacion({
+            tipo: 'playlist',
+            playlistId: botonEliminarPlaylist.dataset.playlistId,
+            nombre: botonEliminarPlaylist.dataset.nombre,
+        });
+        renderModalConfirmacion();
+        return;
+    }
+
+    const botonQuitarCancion = evento.target.closest('[data-action="quitar-cancion"]');
+    if (botonQuitarCancion) {
+        abrirModalConfirmacion({
+            tipo: 'cancion',
+            playlistId: botonQuitarCancion.dataset.playlistId,
+            itemId: botonQuitarCancion.dataset.itemId,
+            nombre: botonQuitarCancion.dataset.titulo,
+        });
+        renderModalConfirmacion();
+    }
 }
 
 function ejecutarConfirmacionModal() {
@@ -245,6 +340,10 @@ function ejecutarConfirmacionModal() {
     renderModalConfirmacion();
     renderListaPlaylists();
     renderDetallePlaylist();
+}
+
+function manejarClickTogglePlaylists() {
+  document.getElementById('panel-playlists').classList.toggle('panel-playlists--visible');
 }
 
 function manejarClickModal(evento) {
@@ -370,10 +469,18 @@ function init() {
     const modal = document.getElementById('modal-confirmacion');
     modal.addEventListener('click', manejarClickModal);
 
+    const audio = document.getElementById('audio-elemento');
+    audio.addEventListener('ended', manejarFinCancion);
+
+    const botonPlayPausa = document.getElementById('boton-play-pausa');
+    botonPlayPausa.addEventListener('click', manejarClickPlayPausa);
+
     document.addEventListener('keydown', manejarTeclaGlobal);
     document.addEventListener('click', manejarClickDocumento);
+    document.getElementById('boton-toggle-playlists').addEventListener('click', manejarClickTogglePlaylists);
+    document.getElementById('boton-cerrar-playlists').addEventListener('click', manejarClickTogglePlaylists);
 
     renderListaPlaylists(); // pinta el estado vacío inicial ("Todavía no creaste ninguna playlist")
-}                                                                // ← agregado: cierre de init()
+}
 
 document.addEventListener('DOMContentLoaded', iniciarApp);

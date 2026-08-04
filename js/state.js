@@ -14,6 +14,7 @@ let estado = {
   modalConfirmacion: null, // { tipo: 'cancion' | 'playlist', playlistId, itemId?, nombre } | null
   criterioOrdenPlaylist: 'antiguas', // 'antiguas' | 'recientes' | 'titulo' | 'artista'
   soloFavoritas: false,
+  reproductor: { cola: [], indice: -1, estaSonando: false },
 };
 
 export function getEstado() {
@@ -204,4 +205,30 @@ export function toggleFavorita(playlistId, itemId) {
 
 export function toggleSoloFavoritas() {
   estado = { ...estado, soloFavoritas: !estado.soloFavoritas };
+}
+
+// --- Reproductor ---
+
+export function reproducirCola(cola, indiceInicial = 0) {
+  estado = { ...estado, reproductor: { cola, indice: indiceInicial, estaSonando: true } };
+}
+
+export function pausarReproductor() {
+  estado = { ...estado, reproductor: { ...estado.reproductor, estaSonando: false } };
+}
+
+export function reanudarReproductor() {
+  estado = { ...estado, reproductor: { ...estado.reproductor, estaSonando: true } };
+}
+
+export function avanzarReproductor() {
+  const { cola, indice } = estado.reproductor;
+  const siguiente = indice + 1;
+
+  if (siguiente >= cola.length) {
+    estado = { ...estado, reproductor: { cola: [], indice: -1, estaSonando: false } };
+    return;
+  }
+
+  estado = { ...estado, reproductor: { cola, indice: siguiente, estaSonando: true } };
 }
